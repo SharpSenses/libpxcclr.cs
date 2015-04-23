@@ -1,0 +1,5 @@
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\obj\Debug\libpxcclr.cs.csprojResolveAssemblyReference.cache
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\bin\Debug\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\bin\Debug\libpxcclr.cs.pdb
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\obj\Debug\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\obj\Debug\libpxcclr.cs.pdb
