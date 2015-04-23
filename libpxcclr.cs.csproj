@@ -92,7 +92,7 @@
     <Compile Include="PXCMTypeExtension.cs" />
     <Compile Include="pxcmStatus.cs" />
     <Compile Include="libpxcclr\cs\Properties\cs\Settings.cs" />
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
