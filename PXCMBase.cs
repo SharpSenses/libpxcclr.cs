@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -58,8 +59,14 @@ public class PXCMBase : IDisposable {
             if (refcount > 0)
                 --refcount;
         }
-        if (num > 0)
-            PXCMBase_Release(instance);
+        if (num > 0) {
+            try {
+                PXCMBase_Release(instance);                        
+            }
+            catch(Exception ex) {
+                Debug.WriteLine("Exception disposing PXCMBase: " + ex);
+            }
+        }
         else
             orig = this;
     }
