@@ -1,0 +1,8 @@
+C:\dev\personal\libpxcclr.cs2\libpxcclr.cs\bin\Release\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs2\libpxcclr.cs\bin\Release\libpxcclr.cs.pdb
+C:\dev\personal\libpxcclr.cs2\libpxcclr.cs\obj\Release\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs2\libpxcclr.cs\obj\Release\libpxcclr.cs.pdb
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\bin\Release\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\bin\Release\libpxcclr.cs.pdb
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\obj\Release\libpxcclr.cs.dll
+C:\dev\personal\libpxcclr.cs\libpxcclr.cs\obj\Release\libpxcclr.cs.pdb

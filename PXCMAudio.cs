@@ -2,32 +2,55 @@
 using System.Runtime.InteropServices;
 
 public class PXCMAudio : PXCMBase {
+    [Flags]
+    public enum Access {
+        ACCESS_READ = 1,
+        ACCESS_WRITE = 2,
+        ACCESS_READ_WRITE = ACCESS_WRITE | ACCESS_READ
+    }
+
+    [Flags]
+    public enum AudioFormat {
+        AUDIO_FORMAT_PCM = 1296257040,
+        AUDIO_FORMAT_IEEE_FLOAT = 1414284832
+    }
+
+    [Flags]
+    public enum ChannelMask {
+        CHANNEL_MASK_FRONT_LEFT = 1,
+        CHANNEL_MASK_FRONT_RIGHT = 2,
+        CHANNEL_MASK_FRONT_CENTER = 4,
+        CHANNEL_MASK_LOW_FREQUENCY = 8,
+        CHANNEL_MASK_BACK_LEFT = 16,
+        CHANNEL_MASK_BACK_RIGHT = 32,
+        CHANNEL_MASK_SIDE_LEFT = 512,
+        CHANNEL_MASK_SIDE_RIGHT = 1024
+    }
+
+    [Flags]
+    public enum Option {
+        OPTION_ANY = 0
+    }
+
     public new const int CUID = 962214344;
 
+    internal PXCMAudio(IntPtr instance, bool delete)
+        : base(instance, delete) {}
+
     public AudioInfo info {
-        get {
-            return QueryInfo();
-        }
+        get { return QueryInfo(); }
     }
 
     public long timeStamp {
-        get {
-            return QueryTimeStamp();
-        }
-        set {
-            SetTimeStamp(value);
-        }
-    }
-
-    internal PXCMAudio(IntPtr instance, bool delete)
-        : base(instance, delete) {
+        get { return QueryTimeStamp(); }
+        set { SetTimeStamp(value); }
     }
 
     [DllImport("libpxccpp2c")]
     internal static extern void PXCMAudio_QueryInfo(IntPtr audio, [Out] AudioInfo info);
 
     public AudioInfo QueryInfo() {
-        AudioInfo info = new AudioInfo();
+        var info = new AudioInfo();
         PXCMAudio_QueryInfo(instance, info);
         return info;
     }
@@ -48,15 +71,16 @@ public class PXCMAudio : PXCMBase {
     internal static extern pxcmStatus PXCMAudio_CopyAudio(IntPtr audio, IntPtr src_audio);
 
     [DllImport("libpxccpp2c")]
-    internal static extern pxcmStatus PXCMAudio_AcquireAccess(IntPtr audio, Access access, AudioFormat format, Option options, IntPtr data);
+    internal static extern pxcmStatus PXCMAudio_AcquireAccess(IntPtr audio, Access access, AudioFormat format,
+        Option options, IntPtr data);
 
     public pxcmStatus AcquireAccess(Access access, AudioFormat format, Option options, out AudioData data) {
-        AudioDataNative audioDataNative = new AudioDataNative();
-        audioDataNative.native = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(AudioDataNative)));
+        var audioDataNative = new AudioDataNative();
+        audioDataNative.native = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (AudioDataNative)));
         data = audioDataNative;
-        pxcmStatus pxcmStatus = PXCMAudio_AcquireAccess(instance, access, format, options, audioDataNative.native);
+        var pxcmStatus = PXCMAudio_AcquireAccess(instance, access, format, options, audioDataNative.native);
         if (pxcmStatus >= pxcmStatus.PXCM_STATUS_NO_ERROR) {
-            IntPtr num = audioDataNative.native;
+            var num = audioDataNative.native;
             Marshal.PtrToStructure(audioDataNative.native, audioDataNative);
             audioDataNative.native = num;
         }
@@ -71,11 +95,13 @@ public class PXCMAudio : PXCMBase {
     internal static extern pxcmStatus PXCMAudio_ReleaseAccess(IntPtr audio, IntPtr data);
 
     public pxcmStatus ReleaseAccess(AudioData data) {
-        AudioDataNative audioDataNative = data as AudioDataNative;
-        if (audioDataNative == null || audioDataNative.native == IntPtr.Zero)
+        var audioDataNative = data as AudioDataNative;
+        if (audioDataNative == null || audioDataNative.native == IntPtr.Zero) {
             return pxcmStatus.PXCM_STATUS_HANDLE_INVALID;
-        Marshal.WriteInt32(audioDataNative.native, Marshal.OffsetOf(typeof(AudioData), "dataSize").ToInt32(), data.dataSize);
-        pxcmStatus status = PXCMAudio_ReleaseAccess(instance, audioDataNative.native);
+        }
+        Marshal.WriteInt32(audioDataNative.native, Marshal.OffsetOf(typeof (AudioData), "dataSize").ToInt32(),
+            data.dataSize);
+        var status = PXCMAudio_ReleaseAccess(instance, audioDataNative.native);
         Marshal.FreeHGlobal(audioDataNative.native);
         audioDataNative.native = IntPtr.Zero;
         return status;
@@ -151,7 +177,7 @@ public class PXCMAudio : PXCMBase {
         }
 
         public void FromByteArray(byte[] src) {
-            dataSize = src.Length / ((int) (format & (AudioFormat) 255) / 8);
+            dataSize = src.Length/((int) (format & (AudioFormat) 255)/8);
             Marshal.Copy(src, 0, dataPtr, src.Length);
         }
 
@@ -166,7 +192,7 @@ public class PXCMAudio : PXCMBase {
         }
 
         public byte[] ToByteArray() {
-            return ToByteArray(new byte[dataSize * (int) (format & (AudioFormat) 255) / 8]);
+            return ToByteArray(new byte[dataSize*(int) (format & (AudioFormat) 255)/8]);
         }
 
         public short[] ToShortArray() {
@@ -183,24 +209,6 @@ public class PXCMAudio : PXCMBase {
         public IntPtr native;
     }
 
-    [Flags]
-    public enum AudioFormat {
-        AUDIO_FORMAT_PCM = 1296257040,
-        AUDIO_FORMAT_IEEE_FLOAT = 1414284832
-    }
-
-    [Flags]
-    public enum ChannelMask {
-        CHANNEL_MASK_FRONT_LEFT = 1,
-        CHANNEL_MASK_FRONT_RIGHT = 2,
-        CHANNEL_MASK_FRONT_CENTER = 4,
-        CHANNEL_MASK_LOW_FREQUENCY = 8,
-        CHANNEL_MASK_BACK_LEFT = 16,
-        CHANNEL_MASK_BACK_RIGHT = 32,
-        CHANNEL_MASK_SIDE_LEFT = 512,
-        CHANNEL_MASK_SIDE_RIGHT = 1024
-    }
-
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public class AudioInfo {
@@ -209,23 +217,10 @@ public class PXCMAudio : PXCMBase {
         public int sampleRate;
         public int nchannels;
         public ChannelMask channelMask;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        internal int[] reserved;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)] internal int[] reserved;
 
         public AudioInfo() {
             reserved = new int[3];
         }
-    }
-
-    [Flags]
-    public enum Option {
-        OPTION_ANY = 0
-    }
-
-    [Flags]
-    public enum Access {
-        ACCESS_READ = 1,
-        ACCESS_WRITE = 2,
-        ACCESS_READ_WRITE = ACCESS_WRITE | ACCESS_READ
     }
 }

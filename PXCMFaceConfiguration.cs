@@ -3,45 +3,31 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 public class PXCMFaceConfiguration : PXCMBase {
+    public delegate void OnFiredAlertDelegate(PXCMFaceData.AlertData alertData);
+
+    public enum SmoothingLevelType {
+        SMOOTHING_DISABLED,
+        SMOOTHING_MEDIUM,
+        SMOOTHING_HIGH
+    }
+
+    public enum TrackingModeType {
+        FACE_MODE_COLOR,
+        FACE_MODE_COLOR_PLUS_DEPTH,
+        FACE_MODE_COLOR_STILL
+    }
+
+    public enum TrackingStrategyType {
+        STRATEGY_APPEARANCE_TIME,
+        STRATEGY_CLOSEST_TO_FARTHEST,
+        STRATEGY_FARTHEST_TO_CLOSEST,
+        STRATEGY_LEFT_TO_RIGHT,
+        STRATEGY_RIGHT_TO_LEFT
+    }
+
     public new const int CUID = 1195787078;
     internal AllFaceConfigurations configs;
     internal EventMaps maps;
-
-    public DetectionConfiguration detection {
-        get {
-            return configs.detection;
-        }
-        set {
-            configs.detection = value;
-        }
-    }
-
-    public LandmarksConfiguration landmarks {
-        get {
-            return configs.landmarks;
-        }
-        set {
-            configs.landmarks = value;
-        }
-    }
-
-    public PoseConfiguration pose {
-        get {
-            return configs.pose;
-        }
-        set {
-            configs.pose = value;
-        }
-    }
-
-    public TrackingStrategyType strategy {
-        get {
-            return configs.strategy;
-        }
-        set {
-            configs.strategy = value;
-        }
-    }
 
     internal PXCMFaceConfiguration(IntPtr instance, bool delete)
         : base(instance, delete) {
@@ -55,19 +41,42 @@ public class PXCMFaceConfiguration : PXCMBase {
         this.maps = maps;
     }
 
+    public DetectionConfiguration detection {
+        get { return configs.detection; }
+        set { configs.detection = value; }
+    }
+
+    public LandmarksConfiguration landmarks {
+        get { return configs.landmarks; }
+        set { configs.landmarks = value; }
+    }
+
+    public PoseConfiguration pose {
+        get { return configs.pose; }
+        set { configs.pose = value; }
+    }
+
+    public TrackingStrategyType strategy {
+        get { return configs.strategy; }
+        set { configs.strategy = value; }
+    }
+
     [DllImport("libpxccpp2c")]
-    internal static extern pxcmStatus PXCMFaceConfiguration_EnableAlert(IntPtr instance, PXCMFaceData.AlertData.AlertType alertEvent);
+    internal static extern pxcmStatus PXCMFaceConfiguration_EnableAlert(IntPtr instance,
+        PXCMFaceData.AlertData.AlertType alertEvent);
 
     [DllImport("libpxccpp2c")]
     internal static extern void PXCMFaceConfiguration_EnableAllAlerts(IntPtr instance);
 
     [DllImport("libpxccpp2c")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool PXCMFaceConfiguration_IsAlertEnabled(IntPtr instance, PXCMFaceData.AlertData.AlertType alertEvent);
+    internal static extern bool PXCMFaceConfiguration_IsAlertEnabled(IntPtr instance,
+        PXCMFaceData.AlertData.AlertType alertEvent);
 
     [DllImport("libpxccpp2c")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool PXCMFaceConfiguration_DisableAlert(IntPtr instance, PXCMFaceData.AlertData.AlertType alertEvent);
+    internal static extern bool PXCMFaceConfiguration_DisableAlert(IntPtr instance,
+        PXCMFaceData.AlertData.AlertType alertEvent);
 
     [DllImport("libpxccpp2c")]
     internal static extern void PXCMFaceConfiguration_DisableAllAlerts(IntPtr instance);
@@ -76,10 +85,11 @@ public class PXCMFaceConfiguration : PXCMBase {
     private static extern pxcmStatus PXCMFaceConfiguration_SubscribeAlert(IntPtr instance, IntPtr alertHandler);
 
     internal static pxcmStatus SubscribeAlertINT(IntPtr instance, OnFiredAlertDelegate handler, out object proxy) {
-        AlertHandlerDIR alertHandlerDir = new AlertHandlerDIR(handler);
-        pxcmStatus pxcmStatus = PXCMFaceConfiguration_SubscribeAlert(instance, alertHandlerDir.uDIR);
-        if (pxcmStatus < pxcmStatus.PXCM_STATUS_NO_ERROR)
+        var alertHandlerDir = new AlertHandlerDIR(handler);
+        var pxcmStatus = PXCMFaceConfiguration_SubscribeAlert(instance, alertHandlerDir.uDIR);
+        if (pxcmStatus < pxcmStatus.PXCM_STATUS_NO_ERROR) {
             alertHandlerDir.Dispose();
+        }
         proxy = alertHandlerDir;
         return pxcmStatus;
     }
@@ -88,8 +98,8 @@ public class PXCMFaceConfiguration : PXCMBase {
     private static extern pxcmStatus PXCMFaceConfiguration_UnsubscribeAlert(IntPtr instance, IntPtr alertHandler);
 
     internal static pxcmStatus UnsubscribeAlertINT(IntPtr instance, object proxy) {
-        AlertHandlerDIR alertHandlerDir = (AlertHandlerDIR) proxy;
-        pxcmStatus pxcmStatus = PXCMFaceConfiguration_UnsubscribeAlert(instance, alertHandlerDir.uDIR);
+        var alertHandlerDir = (AlertHandlerDIR) proxy;
+        var pxcmStatus = PXCMFaceConfiguration_UnsubscribeAlert(instance, alertHandlerDir.uDIR);
         alertHandlerDir.Dispose();
         return pxcmStatus;
     }
@@ -98,7 +108,8 @@ public class PXCMFaceConfiguration : PXCMBase {
     internal static extern pxcmStatus PXCMFaceConfiguration_ApplyChanges(IntPtr instance, AllFaceConfigurations configs);
 
     [DllImport("libpxccpp2c")]
-    private static extern void PXCMFaceConfiguration_GetConfigurations(IntPtr instance, [Out] AllFaceConfigurations configs);
+    private static extern void PXCMFaceConfiguration_GetConfigurations(IntPtr instance,
+        [Out] AllFaceConfigurations configs);
 
     internal static void GetConfigurationsINT(IntPtr instance, out AllFaceConfigurations configs) {
         configs = new AllFaceConfigurations();
@@ -106,7 +117,8 @@ public class PXCMFaceConfiguration : PXCMBase {
     }
 
     [DllImport("libpxccpp2c")]
-    private static extern void PXCMFaceConfiguration_RestoreDefaults(IntPtr instance, [Out] AllFaceConfigurations configs);
+    private static extern void PXCMFaceConfiguration_RestoreDefaults(IntPtr instance,
+        [Out] AllFaceConfigurations configs);
 
     internal static void RestoreDefaultsINT(IntPtr instance, out AllFaceConfigurations configs) {
         configs = new AllFaceConfigurations();
@@ -125,23 +137,27 @@ public class PXCMFaceConfiguration : PXCMBase {
     internal static extern TrackingModeType PXCMFaceConfiguration_GetTrackingMode(IntPtr instance);
 
     [DllImport("libpxccpp2c")]
-    internal static extern pxcmStatus PXCMFaceConfiguration_SetTrackingMode(IntPtr instance, TrackingModeType trackingMode);
+    internal static extern pxcmStatus PXCMFaceConfiguration_SetTrackingMode(IntPtr instance,
+        TrackingModeType trackingMode);
 
     public ExpressionsConfiguration QueryExpressions() {
-        if (configs.expressionInstance == IntPtr.Zero)
+        if (configs.expressionInstance == IntPtr.Zero) {
             return null;
+        }
         return new ExpressionsConfiguration(this);
     }
 
     public RecognitionConfiguration QueryRecognition() {
-        if (configs.recognitionInstance == IntPtr.Zero)
+        if (configs.recognitionInstance == IntPtr.Zero) {
             return null;
+        }
         return new RecognitionConfiguration(this);
     }
 
     public PulseConfiguration QueryPulse() {
-        if (configs.pulseInsance == IntPtr.Zero)
+        if (configs.pulseInsance == IntPtr.Zero) {
             return null;
+        }
         return new PulseConfiguration(this);
     }
 
@@ -174,25 +190,29 @@ public class PXCMFaceConfiguration : PXCMBase {
     }
 
     public pxcmStatus SubscribeAlert(OnFiredAlertDelegate handler) {
-        if (handler == null)
+        if (handler == null) {
             return pxcmStatus.PXCM_STATUS_HANDLE_INVALID;
+        }
         object proxy;
-        pxcmStatus status = SubscribeAlertINT(instance, handler, out proxy);
-        if (status < pxcmStatus.PXCM_STATUS_NO_ERROR)
+        var status = SubscribeAlertINT(instance, handler, out proxy);
+        if (status < pxcmStatus.PXCM_STATUS_NO_ERROR) {
             return status;
+        }
         lock (maps.cs)
             maps.alert[handler] = proxy;
         return status;
     }
 
     public pxcmStatus UnsubscribeAlert(OnFiredAlertDelegate handler) {
-        if (handler == null)
+        if (handler == null) {
             return pxcmStatus.PXCM_STATUS_HANDLE_INVALID;
+        }
         lock (maps.cs) {
             object local_0;
-            if (!maps.alert.TryGetValue(handler, out local_0))
+            if (!maps.alert.TryGetValue(handler, out local_0)) {
                 return pxcmStatus.PXCM_STATUS_HANDLE_INVALID;
-            pxcmStatus local_1 = UnsubscribeAlertINT(instance, local_0);
+            }
+            var local_1 = UnsubscribeAlertINT(instance, local_0);
             maps.alert.Remove(handler);
             return local_1;
         }
@@ -221,6 +241,18 @@ public class PXCMFaceConfiguration : PXCMBase {
             uDIR = PXCMFaceConfiguration_AllocAlertHandlerDIR(Marshal.GetFunctionPointerForDelegate(handler));
         }
 
+        public void Dispose() {
+            if (uDIR == IntPtr.Zero) {
+                return;
+            }
+            PXCMFaceConfiguration_FreeAlertHandlerDIR(uDIR);
+            uDIR = IntPtr.Zero;
+            if (!gch.IsAllocated) {
+                return;
+            }
+            gch.Free();
+        }
+
         ~AlertHandlerDIR() {
             Dispose();
         }
@@ -231,33 +263,19 @@ public class PXCMFaceConfiguration : PXCMBase {
         [DllImport("libpxccpp2c")]
         private static extern void PXCMFaceConfiguration_FreeAlertHandlerDIR(IntPtr hdir);
 
-        public void Dispose() {
-            if (uDIR == IntPtr.Zero)
-                return;
-            PXCMFaceConfiguration_FreeAlertHandlerDIR(uDIR);
-            uDIR = IntPtr.Zero;
-            if (!gch.IsAllocated)
-                return;
-            gch.Free();
-        }
-
         internal delegate void OnFiredAlertDIRDelegate(IntPtr data);
     }
 
     public class ExpressionsConfiguration {
         private PXCMFaceConfiguration instance;
 
-        public ExpressionsProperties properties {
-            get {
-                return instance.configs.expressionProperties;
-            }
-            set {
-                instance.configs.expressionProperties = value;
-            }
-        }
-
         internal ExpressionsConfiguration(PXCMFaceConfiguration instance) {
             this.instance = instance;
+        }
+
+        public ExpressionsProperties properties {
+            get { return instance.configs.expressionProperties; }
+            set { instance.configs.expressionProperties = value; }
         }
 
         [DllImport("libpxccpp2c")]
@@ -267,14 +285,17 @@ public class PXCMFaceConfiguration : PXCMBase {
         internal static extern void PXCMFaceConfiguration_ExpressionsConfiguration_DisableAllExpressions(IntPtr instance);
 
         [DllImport("libpxccpp2c")]
-        internal static extern pxcmStatus PXCMFaceConfiguration_ExpressionsConfiguration_EnableExpression(IntPtr instance, PXCMFaceData.ExpressionsData.FaceExpression expression);
+        internal static extern pxcmStatus PXCMFaceConfiguration_ExpressionsConfiguration_EnableExpression(
+            IntPtr instance, PXCMFaceData.ExpressionsData.FaceExpression expression);
 
         [DllImport("libpxccpp2c")]
-        internal static extern void PXCMFaceConfiguration_ExpressionsConfiguration_DisableExpression(IntPtr instsance, PXCMFaceData.ExpressionsData.FaceExpression expression);
+        internal static extern void PXCMFaceConfiguration_ExpressionsConfiguration_DisableExpression(IntPtr instsance,
+            PXCMFaceData.ExpressionsData.FaceExpression expression);
 
         [DllImport("libpxccpp2c")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool PXCMFaceConfiguration_ExpressionsConfiguration_IsExpressionEnabled(IntPtr instance, PXCMFaceData.ExpressionsData.FaceExpression expression);
+        internal static extern bool PXCMFaceConfiguration_ExpressionsConfiguration_IsExpressionEnabled(IntPtr instance,
+            PXCMFaceData.ExpressionsData.FaceExpression expression);
 
         public void Enable() {
             properties.isEnabled = true;
@@ -297,22 +318,25 @@ public class PXCMFaceConfiguration : PXCMBase {
         }
 
         public pxcmStatus EnableExpression(PXCMFaceData.ExpressionsData.FaceExpression expression) {
-            return PXCMFaceConfiguration_ExpressionsConfiguration_EnableExpression(instance.configs.expressionInstance, expression);
+            return PXCMFaceConfiguration_ExpressionsConfiguration_EnableExpression(instance.configs.expressionInstance,
+                expression);
         }
 
         public void DisableExpression(PXCMFaceData.ExpressionsData.FaceExpression expression) {
-            PXCMFaceConfiguration_ExpressionsConfiguration_DisableExpression(instance.configs.expressionInstance, expression);
+            PXCMFaceConfiguration_ExpressionsConfiguration_DisableExpression(instance.configs.expressionInstance,
+                expression);
         }
 
         public bool IsExpressionEnabled(PXCMFaceData.ExpressionsData.FaceExpression expression) {
-            return PXCMFaceConfiguration_ExpressionsConfiguration_IsExpressionEnabled(instance.configs.expressionInstance, expression);
+            return
+                PXCMFaceConfiguration_ExpressionsConfiguration_IsExpressionEnabled(instance.configs.expressionInstance,
+                    expression);
         }
 
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public class ExpressionsProperties {
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool isEnabled;
+            [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
             public int maxTrackedFaces;
             internal Reserved reserved;
         }
@@ -325,30 +349,18 @@ public class PXCMFaceConfiguration : PXCMBase {
         internal PXCMFaceConfiguration instance;
 
         public RecognitionStorageDesc storageDesc {
-            get {
-                return instance.configs.storageDesc;
-            }
-            set {
-                instance.configs.storageDesc = value;
-            }
+            get { return instance.configs.storageDesc; }
+            set { instance.configs.storageDesc = value; }
         }
 
         public string storageName {
-            get {
-                return instance.configs.storageName;
-            }
-            set {
-                instance.configs.storageName = value;
-            }
+            get { return instance.configs.storageName; }
+            set { instance.configs.storageName = value; }
         }
 
         public RecognitionProperties properties {
-            get {
-                return instance.configs.recognitionProperties;
-            }
-            set {
-                instance.configs.recognitionProperties = value;
-            }
+            get { return instance.configs.recognitionProperties; }
+            set { instance.configs.recognitionProperties = value; }
         }
 
         internal RecognitionConfiguration(PXCMFaceConfiguration instance) {
@@ -356,7 +368,8 @@ public class PXCMFaceConfiguration : PXCMBase {
         }
 
         [DllImport("libpxccpp2c")]
-        private static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_QueryActiveStorage(IntPtr instance, [Out] RecognitionStorageDesc outStorage);
+        private static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_QueryActiveStorage(
+            IntPtr instance, [Out] RecognitionStorageDesc outStorage);
 
         internal static pxcmStatus QueryActiveStorageINT(IntPtr instance, out RecognitionStorageDesc outStorage) {
             outStorage = new RecognitionStorageDesc();
@@ -364,24 +377,30 @@ public class PXCMFaceConfiguration : PXCMBase {
         }
 
         [DllImport("libpxccpp2c", CharSet = CharSet.Unicode)]
-        private static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_CreateStorage(IntPtr instance, string storageName, [Out] RecognitionStorageDesc outStroage);
+        private static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_CreateStorage(IntPtr instance,
+            string storageName, [Out] RecognitionStorageDesc outStroage);
 
-        internal static pxcmStatus CreateStorageINT(IntPtr instance, string storageName, out RecognitionStorageDesc outStorage) {
+        internal static pxcmStatus CreateStorageINT(IntPtr instance, string storageName,
+            out RecognitionStorageDesc outStorage) {
             outStorage = new RecognitionStorageDesc();
             return PXCMFaceConfiguration_RecognitionConfiguration_CreateStorage(instance, storageName, outStorage);
         }
 
         [DllImport("libpxccpp2c", CharSet = CharSet.Unicode)]
-        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_SetStorageDesc(IntPtr instance, string storageName, RecognitionStorageDesc storage);
+        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_SetStorageDesc(IntPtr instance,
+            string storageName, RecognitionStorageDesc storage);
 
         [DllImport("libpxccpp2c", CharSet = CharSet.Unicode)]
-        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_DeleteStorage(IntPtr instance, string storageName);
+        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_DeleteStorage(IntPtr instance,
+            string storageName);
 
         [DllImport("libpxccpp2c", CharSet = CharSet.Unicode)]
-        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_UseStorage(IntPtr instance, string storageName);
+        internal static extern pxcmStatus PXCMFaceConfiguration_RecognitionConfiguration_UseStorage(IntPtr instance,
+            string storageName);
 
         [DllImport("libpxccpp2c")]
-        internal static extern void PXCMFaceConfiguration_RecognitionConfiguration_SetDatabaseBuffer(IntPtr instance, byte[] buffer, int size);
+        internal static extern void PXCMFaceConfiguration_RecognitionConfiguration_SetDatabaseBuffer(IntPtr instance,
+            byte[] buffer, int size);
 
         public void Enable() {
             properties.isEnabled = true;
@@ -395,7 +414,7 @@ public class PXCMFaceConfiguration : PXCMBase {
             properties.accuracyThreshold = threshold;
         }
 
-        public int GetAccuracryThreshold() {
+        public int GetAccuracyThreshold() {
             return properties.accuracyThreshold;
         }
 
@@ -408,12 +427,14 @@ public class PXCMFaceConfiguration : PXCMBase {
         }
 
         public void SetDatabaseBuffer(byte[] buffer) {
-            PXCMFaceConfiguration_RecognitionConfiguration_SetDatabaseBuffer(instance.configs.recognitionInstance, buffer, buffer.Length);
+            PXCMFaceConfiguration_RecognitionConfiguration_SetDatabaseBuffer(instance.configs.recognitionInstance,
+                buffer, buffer.Length);
         }
 
         public pxcmStatus UseStorage(string storageName) {
             this.storageName = storageName;
-            return PXCMFaceConfiguration_RecognitionConfiguration_UseStorage(instance.configs.recognitionInstance, this.storageName);
+            return PXCMFaceConfiguration_RecognitionConfiguration_UseStorage(instance.configs.recognitionInstance,
+                this.storageName);
         }
 
         public pxcmStatus QueryActiveStorage(out RecognitionStorageDesc outStorage) {
@@ -425,11 +446,13 @@ public class PXCMFaceConfiguration : PXCMBase {
         }
 
         public pxcmStatus SetStorageDesc(string storageName, RecognitionStorageDesc storageDesc) {
-            return PXCMFaceConfiguration_RecognitionConfiguration_SetStorageDesc(instance.configs.recognitionInstance, storageName, storageDesc);
+            return PXCMFaceConfiguration_RecognitionConfiguration_SetStorageDesc(instance.configs.recognitionInstance,
+                storageName, storageDesc);
         }
 
         public pxcmStatus DeleteStorage(string storageName) {
-            return PXCMFaceConfiguration_RecognitionConfiguration_DeleteStorage(instance.configs.recognitionInstance, storageName);
+            return PXCMFaceConfiguration_RecognitionConfiguration_DeleteStorage(instance.configs.recognitionInstance,
+                storageName);
         }
 
         public enum RecognitionRegistrationMode {
@@ -440,8 +463,7 @@ public class PXCMFaceConfiguration : PXCMBase {
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public class RecognitionStorageDesc {
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool isPersistent;
+            [MarshalAs(UnmanagedType.Bool)] public bool isPersistent;
             public int maxUsers;
             internal Reserved reserved;
         }
@@ -449,8 +471,7 @@ public class PXCMFaceConfiguration : PXCMBase {
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public class RecognitionProperties {
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool isEnabled;
+            [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
             public int accuracyThreshold;
             public RecognitionRegistrationMode registrationMode;
             internal Reserved reserved;
@@ -471,24 +492,9 @@ public class PXCMFaceConfiguration : PXCMBase {
         internal int res10;
     }
 
-    public enum TrackingStrategyType {
-        STRATEGY_APPEARANCE_TIME,
-        STRATEGY_CLOSEST_TO_FARTHEST,
-        STRATEGY_FARTHEST_TO_CLOSEST,
-        STRATEGY_LEFT_TO_RIGHT,
-        STRATEGY_RIGHT_TO_LEFT
-    }
-
-    public enum SmoothingLevelType {
-        SMOOTHING_DISABLED,
-        SMOOTHING_MEDIUM,
-        SMOOTHING_HIGH
-    }
-
     [StructLayout(LayoutKind.Sequential)]
     public class DetectionConfiguration {
-        [MarshalAs(UnmanagedType.Bool)]
-        public bool isEnabled;
+        [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
         public int maxTrackedFaces;
         public SmoothingLevelType smoothingLevel;
         internal Reserved reserved;
@@ -496,8 +502,7 @@ public class PXCMFaceConfiguration : PXCMBase {
 
     [StructLayout(LayoutKind.Sequential)]
     public class LandmarksConfiguration {
-        [MarshalAs(UnmanagedType.Bool)]
-        public bool isEnabled;
+        [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
         public int maxTrackedFaces;
         public SmoothingLevelType smoothingLevel;
         public int numLandmarks;
@@ -506,8 +511,7 @@ public class PXCMFaceConfiguration : PXCMBase {
 
     [StructLayout(LayoutKind.Sequential)]
     public class PoseConfiguration {
-        [MarshalAs(UnmanagedType.Bool)]
-        public bool isEnabled;
+        [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
         public int maxTrackedFaces;
         public SmoothingLevelType smoothingLevel;
         internal Reserved reserved;
@@ -516,17 +520,13 @@ public class PXCMFaceConfiguration : PXCMBase {
     public class PulseConfiguration {
         private PXCMFaceConfiguration instance;
 
-        public PulseProperties properties {
-            get {
-                return instance.configs.pulseProperties;
-            }
-            set {
-                instance.configs.pulseProperties = value;
-            }
-        }
-
         internal PulseConfiguration(PXCMFaceConfiguration instance) {
             this.instance = instance;
+        }
+
+        public PulseProperties properties {
+            get { return instance.configs.pulseProperties; }
+            set { instance.configs.pulseProperties = value; }
         }
 
         public void Enable() {
@@ -544,19 +544,11 @@ public class PXCMFaceConfiguration : PXCMBase {
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public class PulseProperties {
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool isEnabled;
+            [MarshalAs(UnmanagedType.Bool)] public bool isEnabled;
             public int maxTrackedFaces;
             internal Reserved reserved;
         }
     }
-
-    public enum TrackingModeType {
-        FACE_MODE_COLOR,
-        FACE_MODE_COLOR_PLUS_DEPTH
-    }
-
-    public delegate void OnFiredAlertDelegate(PXCMFaceData.AlertData alertData);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal class AllFaceConfigurations {
@@ -570,8 +562,7 @@ public class PXCMFaceConfiguration : PXCMBase {
         public RecognitionConfiguration.RecognitionProperties recognitionProperties;
         public PulseConfiguration.PulseProperties pulseProperties;
         public RecognitionConfiguration.RecognitionStorageDesc storageDesc;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
-        public string storageName;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)] public string storageName;
         public TrackingStrategyType strategy;
 
         public AllFaceConfigurations() {

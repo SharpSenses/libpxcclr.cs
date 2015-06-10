@@ -5,8 +5,7 @@ public class PXCMAudioSource : PXCMBase {
     public new const int CUID = -666790621;
 
     internal PXCMAudioSource(IntPtr instance, bool delete)
-        : base(instance, delete) {
-    }
+        : base(instance, delete) {}
 
     [DllImport("libpxccpp2c")]
     internal static extern void PXCMAudioSource_ScanDevices(IntPtr source);
@@ -62,12 +61,9 @@ public class PXCMAudioSource : PXCMBase {
     [Serializable]
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public class DeviceInfo {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string name;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string did;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-        internal int[] reserved;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string name;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string did;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] internal int[] reserved;
 
         public DeviceInfo() {
             name = "";
