@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A84C8DB-6359-45FB-BD07-CCE084852177}</ProjectGuid>
+    <ProjectGuid>{E4BAB068-D41B-42E3-B6AA-ABAD7160FB1C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>libpxcclr.cs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -148,6 +148,7 @@
     <Compile Include="src\pxcmvideomodule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="libpxcclr.cs.nuspec" />
     <None Include="Properties.cs\Settings.settings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
