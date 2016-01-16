@@ -11,6 +11,7 @@
     <TargetFrameworkProfile />
     <ApplicationVersion>5.0.3.7777</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
+    <AppDesignerFolder>Properties.cs</AppDesignerFolder>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -27,7 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;SAMPLEDX_CUSTOMIZATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -39,64 +40,115 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PXCMBase.cs" />
-    <Compile Include="PXCM3DScan.cs" />
-    <Compile Include="PXCM3DSeg.cs" />
-    <Compile Include="PXCMAddRef.cs" />
-    <Compile Include="PXCMAudio.cs" />
-    <Compile Include="PXCMAudioSource.cs" />
-    <Compile Include="PXCMBlobConfiguration.cs" />
-    <Compile Include="PXCMBlobData.cs" />
-    <Compile Include="PXCMBlobExtractor.cs" />
-    <Compile Include="PXCMBlobModule.cs" />
-    <Compile Include="PXCMCapture.cs" />
-    <Compile Include="PXCMCaptureManager.cs" />
-    <Compile Include="PXCMContourExtractor.cs" />
-    <Compile Include="PXCMDataSmoothing.cs" />
-    <Compile Include="PXCMEmotion.cs" />
-    <Compile Include="PXCMEnhancedPhotography.cs" />
-    <Compile Include="PXCMFaceConfiguration.cs" />
-    <Compile Include="PXCMFaceData.cs" />
-    <Compile Include="PXCMFaceModule.cs" />
-    <Compile Include="PXCMHandConfiguration.cs" />
-    <Compile Include="PXCMHandData.cs" />
-    <Compile Include="PXCMHandModule.cs" />
-    <Compile Include="PXCMImage.cs" />
-    <Compile Include="PXCMLoggingService.cs" />
-    <Compile Include="PXCMSession.cs" />
-    <Compile Include="PXCMMetadata.cs" />
-    <Compile Include="PXCMPhoto.cs" />
-    <Compile Include="PXCMPointConverter.cs" />
-    <Compile Include="PXCMPointConverterFactory.cs" />
-    <Compile Include="PXCMPowerState.cs" />
-    <Compile Include="PXCMProjection.cs" />
-    <Compile Include="PXCMCalibration.cs" />
-    <Compile Include="PXCMRotation.cs" />
-    <Compile Include="PXCMSurfaceVoxelsData.cs" />
-    <Compile Include="PXCMBlockMeshingData.cs" />
-    <Compile Include="PXCMScenePerception.cs" />
-    <Compile Include="PXCMSmoother.cs" />
-    <Compile Include="PXCMSpeechRecognition.cs" />
-    <Compile Include="PXCMSpeechSynthesis.cs" />
-    <Compile Include="PXCMSyncPoint.cs" />
-    <Compile Include="PXCMSenseManager.cs" />
-    <Compile Include="PXCMTouchlessController.cs" />
-    <Compile Include="PXCMTracker.cs" />
-    <Compile Include="PXCMTrackerUtils.cs" />
-    <Compile Include="PXCMVideoModule.cs" />
-    <Compile Include="PXCMRectI32.cs" />
-    <Compile Include="PXCMRectF32.cs" />
-    <Compile Include="PXCMSizeI32.cs" />
-    <Compile Include="PXCMPointF32.cs" />
-    <Compile Include="PXCMPointI32.cs" />
-    <Compile Include="PXCMRangeF32.cs" />
-    <Compile Include="PXCMPoint3DF32.cs" />
-    <Compile Include="PXCMPoint4DF32.cs" />
-    <Compile Include="PXCMBox3DF32.cs" />
-    <Compile Include="PXCMTypeExtension.cs" />
-    <Compile Include="pxcmStatus.cs" />
-    <Compile Include="libpxcclr\cs\Properties\cs\Settings.cs" />
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Properties.cs\AssemblyInfo.cs" />
+    <Compile Include="Properties.cs\Settings.Designer.cs" />
+    <Compile Include="src\native\pxcm3dscan.cs" />
+    <Compile Include="src\native\pxcm3dseg.cs" />
+    <Compile Include="src\native\pxcmaddref.cs" />
+    <Compile Include="src\native\pxcmaudio.cs" />
+    <Compile Include="src\native\pxcmaudiosource.cs" />
+    <Compile Include="src\native\pxcmbase.cs" />
+    <Compile Include="src\native\pxcmblobconfiguration.cs" />
+    <Compile Include="src\native\pxcmblobdata.cs" />
+    <Compile Include="src\native\pxcmblobextractor.cs" />
+    <Compile Include="src\native\pxcmblobmodule.cs" />
+    <Compile Include="src\native\pxcmcalibration.cs" />
+    <Compile Include="src\native\pxcmcapture.cs" />
+    <Compile Include="src\native\pxcmcapturemanager.cs" />
+    <Compile Include="src\native\pxcmcontourextractor.cs" />
+    <Compile Include="src\native\pxcmdatasmoothing.cs" />
+    <Compile Include="src\native\pxcmenhancedphoto.cs" />
+    <Compile Include="src\native\pxcmenhancedvideo.cs" />
+    <Compile Include="src\native\pxcmfaceconfiguration.cs" />
+    <Compile Include="src\native\pxcmfacedata.cs" />
+    <Compile Include="src\native\pxcmfacemodule.cs" />
+    <Compile Include="src\native\pxcmhandconfiguration.cs" />
+    <Compile Include="src\native\pxcmhanddata.cs" />
+    <Compile Include="src\native\pxcmhandmodule.cs" />
+    <Compile Include="src\native\pxcmimage-bitmap.cs" />
+    <Compile Include="src\native\pxcmimage.cs" />
+    <Compile Include="src\native\pxcmloggingservice.cs" />
+    <Compile Include="src\native\pxcmmetadata.cs" />
+    <Compile Include="src\native\pxcmobjectrecognitionconfiguration.cs" />
+    <Compile Include="src\native\pxcmobjectrecognitiondata.cs" />
+    <Compile Include="src\native\pxcmobjectrecognitionmodule.cs" />
+    <Compile Include="src\native\pxcmpersontrackingconfiguration.cs" />
+    <Compile Include="src\native\pxcmpersontrackingdata.cs" />
+    <Compile Include="src\native\pxcmpersontrackingmodule.cs" />
+    <Compile Include="src\native\pxcmphoto.cs" />
+    <Compile Include="src\native\pxcmplatformcameracontrol.cs" />
+    <Compile Include="src\native\pxcmpointconverter.cs" />
+    <Compile Include="src\native\pxcmpointconverterfactory.cs" />
+    <Compile Include="src\native\pxcmpowerstate.cs" />
+    <Compile Include="src\native\pxcmprojection.cs" />
+    <Compile Include="src\native\pxcmrotation.cs" />
+    <Compile Include="src\native\pxcmsceneperception.cs" />
+    <Compile Include="src\native\pxcmsensemanager.cs" />
+    <Compile Include="src\native\pxcmsession.cs" />
+    <Compile Include="src\native\pxcmsmoother.cs" />
+    <Compile Include="src\native\pxcmspeechrecognition.cs" />
+    <Compile Include="src\native\pxcmspeechsynthesis.cs" />
+    <Compile Include="src\native\pxcmsyncpoint.cs" />
+    <Compile Include="src\native\pxcmtouchlesscontroller.cs" />
+    <Compile Include="src\native\pxcmtracker.cs" />
+    <Compile Include="src\native\pxcmtrackerutils.cs" />
+    <Compile Include="src\native\pxcmvideomodule.cs" />
+    <Compile Include="src\pxcm3dscan.cs" />
+    <Compile Include="src\pxcm3dseg.cs" />
+    <Compile Include="src\pxcmaddref.cs" />
+    <Compile Include="src\pxcmaudio.cs" />
+    <Compile Include="src\pxcmaudiosource.cs" />
+    <Compile Include="src\pxcmbase.cs" />
+    <Compile Include="src\pxcmblobconfiguration.cs" />
+    <Compile Include="src\pxcmblobdata.cs" />
+    <Compile Include="src\pxcmblobextractor.cs" />
+    <Compile Include="src\pxcmblobmodule.cs" />
+    <Compile Include="src\pxcmcalibration.cs" />
+    <Compile Include="src\pxcmcapture.cs" />
+    <Compile Include="src\pxcmcapturemanager.cs" />
+    <Compile Include="src\pxcmcontourextractor.cs" />
+    <Compile Include="src\pxcmdatasmoothing.cs" />
+    <Compile Include="src\pxcmdefs.cs" />
+    <Compile Include="src\pxcmdefs.extensions.cs" />
+    <Compile Include="src\pxcmenhancedphoto.cs" />
+    <Compile Include="src\pxcmenhancedvideo.cs" />
+    <Compile Include="src\pxcmfaceconfiguration.cs" />
+    <Compile Include="src\pxcmfacedata.cs" />
+    <Compile Include="src\pxcmfacemodule.cs" />
+    <Compile Include="src\pxcmhandconfiguration.cs" />
+    <Compile Include="src\pxcmhanddata.cs" />
+    <Compile Include="src\pxcmhandmodule.cs" />
+    <Compile Include="src\pxcmimage-writeablebitmap.cs" />
+    <Compile Include="src\pxcmimage.cs" />
+    <Compile Include="src\pxcmmetadata.cs" />
+    <Compile Include="src\pxcmobjectrecognitionconfiguration.cs" />
+    <Compile Include="src\pxcmobjectrecognitiondata.cs" />
+    <Compile Include="src\pxcmobjectrecognitionmodule.cs" />
+    <Compile Include="src\pxcmpersontrackingconfiguration.cs" />
+    <Compile Include="src\pxcmpersontrackingdata.cs" />
+    <Compile Include="src\pxcmpersontrackingmodule.cs" />
+    <Compile Include="src\pxcmphoto.cs" />
+    <Compile Include="src\pxcmplatformcameracontrol.cs" />
+    <Compile Include="src\pxcmpointconverter.cs" />
+    <Compile Include="src\pxcmpointconverterfactory.cs" />
+    <Compile Include="src\pxcmpowerstate.cs" />
+    <Compile Include="src\pxcmprojection.cs" />
+    <Compile Include="src\pxcmrotation.cs" />
+    <Compile Include="src\pxcmsceneperception.cs" />
+    <Compile Include="src\pxcmsensemanager.cs" />
+    <Compile Include="src\pxcmsession.cs" />
+    <Compile Include="src\pxcmsmoother.cs" />
+    <Compile Include="src\pxcmspeechrecognition.cs" />
+    <Compile Include="src\pxcmspeechsynthesis.cs" />
+    <Compile Include="src\pxcmstatus.cs" />
+    <Compile Include="src\pxcmsyncpoint.cs" />
+    <Compile Include="src\pxcmtouchlesscontroller.cs" />
+    <Compile Include="src\pxcmtracker.cs" />
+    <Compile Include="src\pxcmtrackerutils.cs" />
+    <Compile Include="src\pxcmvideomodule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties.cs\Settings.settings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
