@@ -45,32 +45,37 @@ public partial class PXCM3DScan : PXCMBase
         BODY                                 // Fixed scanning size for scanning human body (with arms at sides)
     };
 
+    const Int32 CONFIGURATION_RESERVED = 59; 
     /// <summary>
     ///  Configuration structure
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]              
     public class Configuration
     {
         [MarshalAs(UnmanagedType.Bool)]
-        public Boolean startScan;
-        public ScanningMode mode;
-        public ReconstructionOption options;
-        public Int32 maxTriangles;
-        public Int32 maxVertices;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 63)]
-        public Int32[] reserved;
+        public Boolean startScan;                     // Start the scan.
+        public ScanningMode mode;                     // Scanning mode.
+        public ReconstructionOption options;          // Options for reconstruction.
+        public Int32 maxTriangles;                    // Number of triangles.
+        public Int32 maxVertices;                     // Number of vertices.
+        public PXCMSizeI32 maxTextureResolution;      // (w,h) in pixels.
+        public Boolean flopPreviewImage;              // https://en.wikipedia.org/wiki/Flopped_image
+        public Boolean useMarker;                     // Enable the tracking aid.
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = CONFIGURATION_RESERVED)]
+        public Int32[] reserved;                      // Reserved bits.
 
         public Configuration()
         {
-            reserved = new Int32[64];
+            reserved = new Int32[CONFIGURATION_RESERVED];
         }
     };
 
     /// <summary>
     /// Query the current PXCM3DScan Configuration
     /// </summary>
-    /// <returns> PXCM3DScan Configuration object </returns>
+    /// <returns> PXCM3DScan Configuration structure </returns>
     public Configuration QueryConfiguration()
     {
         Configuration config = new Configuration();
@@ -82,7 +87,7 @@ public partial class PXCM3DScan : PXCMBase
     /// Set the PXCM3DScan configuration.
     /// </summary>
     /// <param name="config"> The configuration object to be set. </param>
-    /// <returns> the method executation status code </returns>
+    /// <returns> the status code </returns>
     public pxcmStatus SetConfiguration(Configuration config)
     {
         return PXCM3DScan_SetConfiguration(instance, config);
@@ -104,7 +109,7 @@ public partial class PXCM3DScan : PXCMBase
         {
             reserved = new Int32[64];
         }
-    };
+    };    
 
     /// <summary>
     /// Query the current PXC3DScan Area
@@ -227,7 +232,7 @@ public partial class PXCM3DScan : PXCMBase
 
     /// <summary>
     /// AlertEvent
-    /// Enumeratea all supported alert events.
+    /// Enumerate all supported alert events.
     /// </summary>
     [Flags]
     public enum AlertEvent
@@ -274,6 +279,14 @@ public partial class PXCM3DScan : PXCMBase
         ALERT_FACE_PITCH_IN_RANGE,
         ALERT_FACE_PITCH_TOO_FAR_UP,
         ALERT_FACE_PITCH_TOO_FAR_DOWN,
+
+        ALERT_FACE_MOTION_TOO_SLOW,
+        ALERT_FACE_MOTION_TOO_FAST,
+        ALERT_FACE_MOTION_IN_RANGE,
+
+        // Fiducial Marker Tracking Detected.
+        ALERT_FIDUCIAL_MARKER_DETECTED,
+        ALERT_FIDUCIAL_MARKER_NOT_DETECTED,
     };
 
     /// <summary>

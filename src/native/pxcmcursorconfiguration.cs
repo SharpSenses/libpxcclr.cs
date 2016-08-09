@@ -103,7 +103,14 @@ namespace intel.rssdk
         internal static extern pxcmStatus PXCMCursorConfiguration_SetTrackingBounds(IntPtr instance, PXCMCursorData.TrackingBounds trackingBounds);
 
         [DllImport(DLLNAME)]
-        internal static extern PXCMCursorData.TrackingBounds PXCMCursorConfiguration_QueryTrackingBounds(IntPtr instance);
+        private static extern pxcmStatus PXCMCursorConfiguration_QueryTrackingBounds(IntPtr instance, [Out] PXCMCursorData.TrackingBounds trackingBounds);
+
+        internal static pxcmStatus QueryTrackingBoundsINT(IntPtr instance, out PXCMCursorData.TrackingBounds trackingBounds)
+        {
+            trackingBounds = new PXCMCursorData.TrackingBounds();
+            return PXCMCursorConfiguration_QueryTrackingBounds(instance, trackingBounds);
+        }
+
 
         [DllImport(DLLNAME)]
         internal static extern pxcmStatus PXCMCursorConfiguration_EnableEngagement(IntPtr instance, Boolean enable);

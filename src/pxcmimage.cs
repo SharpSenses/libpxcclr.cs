@@ -54,6 +54,7 @@ public partial class PXCMImage : PXCMBase
         PIXEL_FORMAT_DEPTH = 0x00020000,    /* 16-bit unsigned integer with precision mm. */
         PIXEL_FORMAT_DEPTH_RAW,             /* 16-bit unsigned integer with device specific precision. */
         PIXEL_FORMAT_DEPTH_F32,             /* 32-bit float-point with precision mm. */
+        PIXEL_FORMAT_DEPTH_CONFIDENCE = 0x40000004, /* Additional plane with 8-bits depth confidence (MSB) */
 
         /* STREAM_TYPE_IR */
         PIXEL_FORMAT_Y16 = 0x00040000,    /* 16-Bit Gray Image or IR 16-bit */
@@ -78,6 +79,7 @@ public partial class PXCMImage : PXCMBase
             case PixelFormat.PIXEL_FORMAT_DEPTH: return "DEPTH";
             case PixelFormat.PIXEL_FORMAT_DEPTH_F32: return "DEPTH(FLOAT)";
             case PixelFormat.PIXEL_FORMAT_DEPTH_RAW: return "DEPTH(NATIVE)";
+            case PixelFormat.PIXEL_FORMAT_DEPTH_CONFIDENCE: return "DEPTH_CONFIDENCE";
         }
         return "Unknown";
     }

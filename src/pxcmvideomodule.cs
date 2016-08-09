@@ -146,9 +146,9 @@ namespace intel.rssdk
 		internal class DataDescINT
 		{
 			public StreamDesc[] streams;                   // requested stream characters 
-			public DeviceCap[] devCaps;                     // requested device properties 
-			public PXCMCapture.DeviceInfo deviceInfo;       // requested device info 
-			 };
+			public DeviceCap[] devCaps;                    // requested device properties 
+			public PXCMCapture.DeviceInfo deviceInfo;      // requested device info 
+        };
 
 			/// <summary> 
 			/// struct
@@ -227,6 +227,36 @@ namespace intel.rssdk
 				sp = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? new PXCMSyncPoint(sp2, true) : null;
 				return sts;
 			}
+
+            /**
+            @brief Pass projection object for mappings between color and depth coordinate systems
+            @param[in] projection       The projection object.
+            */
+            public void SetProjection(PXCMProjection proj) 
+            {
+                PXCMVideoModule_SetProjection(instance, proj.instance);
+            }
+
+            /**
+                @brief enables GPU processing controls
+                @param[in] enable is a bool that enables a specific taskId on GPU.
+		        @param[in] taskId provides more fine-grained controls on which task would be enbled on GPU.
+		        default is -1, meaning that all tasks are enabled on GPU. 
+            */
+            public void SetGPUExec(Boolean enable, Int32 taskId)
+            {
+                PXCMVideoModule_SetGPUExec(instance, enable, taskId);
+            }
+
+            public void SetGPUExec(Boolean enable)
+            {
+                PXCMVideoModule_SetGPUExec(instance, enable, -1);
+            }
+
+            public void SetGPUExec()
+            {
+                PXCMVideoModule_SetGPUExec(instance, true, -1);
+            }
 
 			internal PXCMVideoModule(IntPtr instance, Boolean delete)
 				: base(instance, delete)

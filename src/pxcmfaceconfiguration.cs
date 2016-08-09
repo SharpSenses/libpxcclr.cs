@@ -399,6 +399,7 @@ public partial class PXCMFaceConfiguration : PXCMBase
         FACE_MODE_COLOR,
         FACE_MODE_COLOR_PLUS_DEPTH,
         FACE_MODE_COLOR_STILL,
+        FACE_MODE_IR,
     };
 
     public DetectionConfiguration detection

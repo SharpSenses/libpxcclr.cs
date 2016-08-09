@@ -130,6 +130,9 @@ namespace intel.rssdk
 
         [DllImport(DLLNAME)]
         internal static extern pxcmStatus PXCMCursorData_QueryCursorDataById(IntPtr instance, Int32 handId, out IntPtr cursorData);
+
+        [DllImport(DLLNAME)]
+        internal static extern pxcmStatus PXCMCursorData_ResetAdaptiveById(IntPtr instance, Int32 cursorID, PXCMPoint3DF32 resetPosition);
     };
 
 #if RSSDK_IN_NAMESPACE

@@ -96,9 +96,9 @@ public partial class PXCMCursorConfiguration : PXCMBase
     /// Get the values defining the tracking boundaries frustum.
     /// </summary>
     /// <returns> PXCMCursorData.TrackingBounds  </returns>
-    public PXCMCursorData.TrackingBounds QueryTrackingBounds()
+    public pxcmStatus QueryTrackingBounds(out PXCMCursorData.TrackingBounds trackingBounds)
     {
-        return PXCMCursorConfiguration_QueryTrackingBounds(instance);
+        return QueryTrackingBoundsINT(instance,out trackingBounds);
     }
 
     /// <summary> 

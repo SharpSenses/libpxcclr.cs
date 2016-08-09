@@ -85,10 +85,16 @@ public partial class PXCMPhoto : PXCMBase
     /// Export the photo content to the XDM File Format v2.0.
     /// </summary>
     /// <param name="filename"> The file name.</param>
+    /// <param name="removeOriginalImage">removeOriginalImage Flag to indicate whether to remove original image from XDM photo if container image is processed. This will reduce XDM photo size. True = Removes the original image from XDM photo. False (Default) = Keeps the original image if the container image is processed.</param>
     /// <returns> PXCM_STATUS_NO_ERROR     Successful execution.</returns>
+    public pxcmStatus SaveXDM(String filename, Boolean removeOriginalImage)
+    {
+        return PXCMPhoto_SaveXDM(instance, filename, removeOriginalImage);
+    }
+
     public pxcmStatus SaveXDM(String filename)
     {
-        return PXCMPhoto_SaveXDM(instance, filename);
+        return SaveXDM(filename, false);
     }
 
     /// <summary>

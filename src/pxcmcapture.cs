@@ -232,31 +232,41 @@ public partial class PXCMCapture : PXCMBase
     [Flags]
     public enum DeviceOrientation
     {
-        DEVICE_ORIENTATION_ANY = 0x0,   /* Unknown orientation */
-        DEVICE_ORIENTATION_USER_FACING = 0x1,   /* A user facing camera */
+        DEVICE_ORIENTATION_ANY = 0x0,            /* Unknown orientation */
+        DEVICE_ORIENTATION_USER_FACING = 0x1,    /* A user facing camera */
         DEVICE_ORIENTATION_FRONT_FACING = 0x1,   /* A front facing camera */
         DEVICE_ORIENTATION_WORLD_FACING = 0x2,   /* A world facing camera */
-        DEVICE_ORIENTATION_REAR_FACING = 0x2,   /* A rear facing camera */
+        DEVICE_ORIENTATION_REAR_FACING = 0x2,    /* A rear facing camera */
     };
 
     /// <summary> 
     /// ConnectionType
-    /// Describes the Connection type of the deivce
+    /// Describes the Connection type of the device
     /// </summary>
     [Flags]
     public enum ConnectionType : int
     {
-        CONNECTION_TYPE_UNKOWN = 0,				/* Any connection type */
-        CONNECTION_TYPE_USB_INTEGRATED,			/* USB Integrated Camera */
-        CONNECTION_TYPE_USB_PERIPHERAL			/* USB Peripheral Camera */
+        CONNECTION_TYPE_UNKNOWN = 0,             /* Any connection type */
+        CONNECTION_TYPE_USB_INTEGRATED,          /* USB Integrated Camera */
+        CONNECTION_TYPE_USB_PERIPHERAL           /* USB Peripheral Camera */
     };
+
+    public static String ConnectionTypeToString(ConnectionType type)
+    {
+        switch (type)
+        {
+            case ConnectionType.CONNECTION_TYPE_USB_INTEGRATED: return "USB Integrated";
+            case ConnectionType.CONNECTION_TYPE_USB_PERIPHERAL: return "USB Peripheral";
+        }
+        return "Unknown";
+    }
 
     public partial class Device : PXCMBase
     {
         new public const Int32 CUID = unchecked((Int32)0x938401C4);
 
         /// <summary> 
-        /// Return the device infomation structure of the current device.
+        /// Return the device information structure of the current device.
         /// </summary>
         public DeviceInfo deviceInfo
         {
@@ -275,8 +285,8 @@ public partial class PXCMCapture : PXCMBase
         public enum PowerLineFrequency
         {
             POWER_LINE_FREQUENCY_DISABLED = 0,		/* Disabled power line frequency */
-            POWER_LINE_FREQUENCY_50HZ = 50,			/* 50HZ power line frequency */
-            POWER_LINE_FREQUENCY_60HZ = 60,			/* 60HZ power line frequency */
+            POWER_LINE_FREQUENCY_50HZ = 1,			/* 50HZ power line frequency */
+            POWER_LINE_FREQUENCY_60HZ = 2,			/* 60HZ power line frequency */
         };
 
         /// <summary>
@@ -356,24 +366,27 @@ public partial class PXCMCapture : PXCMBase
             PROPERTY_DS_DISPARITY_MULTIPLIER = 0x20004,		/* Int32         RW    Sets the disparity scale factor used when in disparity output mode. Default value is 32.*/
             PROPERTY_DS_DISPARITY_SHIFT = 0x20005,		/* Int32         RW    Reduces both the minimum and maximum depth that can be computed. Allows range to be computed for points in the near field which would otherwise be beyond the disparity search range.*/
 
-            PROPERTY_DS_MIN_MAX_Z = 0x20006,		/* PXCMRangeF32  RW    The minimum z and maximum z in Z units that will be output   */
+            PROPERTY_DS_MIN_MAX_Z = 0x20006,		        /* PXCMRangeF32  RW    The minimum z and maximum z in Z units that will be output   */
             PROPERTY_DS_COLOR_RECTIFICATION = 0x20008,		/* Boolean       R     if true rectification is enabled to DS color*/
             PROPERTY_DS_DEPTH_RECTIFICATION = 0x20009,		/* Boolean       R     if true rectification is enabled to DS depth*/
             PROPERTY_DS_LEFTRIGHT_EXPOSURE = 0x2000A,		/* Single        RW    The depth stream exposure, in log base 2 seconds. */
-            PROPERTY_DS_LEFTRIGHT_GAIN = 0x2000B,		/* Int32         RW   The depth stream gain adjustment, with negative values darker, positive values brighter, and zero as normal. */
+            PROPERTY_DS_LEFTRIGHT_GAIN = 0x2000B,		    /* Int32         RW   The depth stream gain adjustment, with negative values darker, positive values brighter, and zero as normal. */
 
-            PROPERTY_DS_Z_TO_DISPARITY_CONSTANT = 0x2000C,      /* pxcF32        R     used to convert between Z distance (in mm) and disparity (in pixels)*/
-            PROPERTY_DS_ROBINS_MUNROE_MINUS_INCREMENT = 0x2000D, /* pxcF32        RW    Sets the value to subtract when estimating the median of the correlation surface.*/
-            PROPERTY_DS_ROBINS_MUNROE_PLUS_INCREMENT = 0x2000E, /* pxcF32        RW    Sets the value to add when estimating the median of the correlation surface. */
-            PROPERTY_DS_MEDIAN_THRESHOLD = 0x2000F, /* pxcF32        RW    Sets the threshold for how much the winning score must beat the median to be judged a reliable depth measurement. */
-            PROPERTY_DS_SCORE_MIN_THRESHOLD = 0x20010, /* pxcF32        RW    Sets the minimum correlation score that is considered acceptable. */
-            PROPERTY_DS_SCORE_MAX_THRESHOLD = 0x20011, /* pxcF32        RW    Sets the maximum correlation score that is considered acceptable. */
-            PROPERTY_DS_TEXTURE_COUNT_THRESHOLD = 0x20012, /* pxcF32        RW    Set parameter for determining how much texture in the region is sufficient to be judged a reliable depth measurement. */
-            PROPERTY_DS_TEXTURE_DIFFERENCE_THRESHOLD = 0x20013, /* pxcF32        RW    Set parameter for determining whether the texture in the region is sufficient to justify a reliable depth measurement. */
-            PROPERTY_DS_SECOND_PEAK_THRESHOLD = 0x20014, /* pxcF32        RW    Sets the threshold for how much the minimum correlation score must differ from the next best score to be judged a reliable depth measurement. */
-            PROPERTY_DS_NEIGHBOR_THRESHOLD = 0x20015, /* pxcF32        RW    Sets the threshold for how much at least one adjacent disparity score must differ from the minimum score to be judged a reliable depth measurement. */
-            PROPERTY_DS_LR_THRESHOLD = 0x20016, /* pxcF32        RW    Determines the current threshold for determining whether the left-right match agrees with the right-left match. */
+            PROPERTY_DS_Z_TO_DISPARITY_CONSTANT = 0x2000C,          /* Single        R     used to convert between Z distance (in mm) and disparity (in pixels)*/
+            PROPERTY_DS_ROBINS_MUNROE_MINUS_INCREMENT = 0x2000D,    /* Single        RW    Sets the value to subtract when estimating the median of the correlation surface.*/
+            PROPERTY_DS_ROBINS_MUNROE_PLUS_INCREMENT = 0x2000E,     /* Single        RW    Sets the value to add when estimating the median of the correlation surface. */
+            PROPERTY_DS_MEDIAN_THRESHOLD = 0x2000F,                 /* Single        RW    Sets the threshold for how much the winning score must beat the median to be judged a reliable depth measurement. */
+            PROPERTY_DS_SCORE_MIN_THRESHOLD = 0x20010,              /* Single        RW    Sets the minimum correlation score that is considered acceptable. */
+            PROPERTY_DS_SCORE_MAX_THRESHOLD = 0x20011,              /* Single        RW    Sets the maximum correlation score that is considered acceptable. */
+            PROPERTY_DS_TEXTURE_COUNT_THRESHOLD = 0x20012,          /* Single        RW    Set parameter for determining how much texture in the region is sufficient to be judged a reliable depth measurement. */
+            PROPERTY_DS_TEXTURE_DIFFERENCE_THRESHOLD = 0x20013,     /* Single        RW    Set parameter for determining whether the texture in the region is sufficient to justify a reliable depth measurement. */
+            PROPERTY_DS_SECOND_PEAK_THRESHOLD = 0x20014,            /* Single        RW    Sets the threshold for how much the minimum correlation score must differ from the next best score to be judged a reliable depth measurement. */
+            PROPERTY_DS_NEIGHBOR_THRESHOLD = 0x20015,               /* Single        RW    Sets the threshold for how much at least one adjacent disparity score must differ from the minimum score to be judged a reliable depth measurement. */
+            PROPERTY_DS_LR_THRESHOLD = 0x20016,                     /* Single        RW    Determines the current threshold for determining whether the left-right match agrees with the right-left match. */
 
+            PROPERTY_SR300_COLOR_EXPOSURE_PRIORITY = 0x30000,       /* Single        RW    Sets the Color Exposure Priority. */
+            PROPERTY_SR300_HDR_MODE = 0x30001,                      /* Single        RW    Sets the HDR mode (0 = DISABLED). */
+                                                         
             /* Customized properties */
             PROPERTY_CUSTOMIZED = 0x04000000,			/* CUSTOMIZED properties */
         };

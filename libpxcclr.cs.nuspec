@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>libpxcclr.cs</id>
-    <version>$version$</version>
-    <title>$title$</title>
+    <version>10.0.26.396</version>
+    <title>"Intel(R) RealSense(TM) SDK C# Wrapper Library"</title>
     <authors>Intel</authors>
     <owners>Intel</owners>
     <projectUrl>https://github.com/SharpSenses/libpxcclr.cs</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <copyright>Copyright Intel 2015</copyright>
+    <description>"AnyCpu version of libpxcclr.cs"</description>
+    <copyright>Copyright Intel 2016</copyright>
     <tags>realsense intel camera3d gestures</tags>
   </metadata>
 </package>

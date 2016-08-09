@@ -55,6 +55,9 @@ namespace intel.rssdk
             internal static extern IntPtr PXCMEnhancedPhoto_EnhanceDepth(IntPtr ep, IntPtr photo, DepthFillQuality depthQuality);
 
             [DllImport(PXCMBase.DLLNAME)]
+            internal static extern IntPtr PXCMEnhancedPhoto_PreviewEnhanceDepth(IntPtr ep, PXCMCapture.Sample sample, DepthFillQuality depthQuality);
+
+            [DllImport(PXCMBase.DLLNAME)]
             internal static extern DepthMapQuality PXCMEnhancedPhoto_GetDepthQuality(IntPtr ep, IntPtr depthMap);
 
             [DllImport(PXCMBase.DLLNAME)]
@@ -64,7 +67,10 @@ namespace intel.rssdk
             internal static extern IntPtr PXCMEnhancedPhoto_CommonFOV(IntPtr ep, IntPtr photo);
 
             [DllImport(PXCMBase.DLLNAME)]
-            internal static extern pxcmStatus PXCMEnhancedPhoto_PreviewCommonFOV(IntPtr ep, IntPtr photo, ref PXCMRectI32 rect);
+            internal static extern pxcmStatus PXCMEnhancedPhoto_PreviewCommonFOV(IntPtr ep, PXCMCapture.Sample sample, ref PXCMRectI32 rect);
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern pxcmStatus PXCMEnhancedPhoto_PreviewCommonFOVDeprecated(IntPtr ep, IntPtr sample, ref PXCMRectI32 rect);
 
             [DllImport(PXCMBase.DLLNAME)]
             internal static extern IntPtr PXCMEnhancedPhoto_DepthResize(IntPtr ep, IntPtr photo, Int32 width, DepthFillQuality depthQuality);
@@ -100,16 +106,31 @@ namespace intel.rssdk
         public partial class Paster : PXCMBase
         {
             [DllImport(PXCMBase.DLLNAME)]
-            internal static extern pxcmStatus PXCMEnhancedPhoto_SetPhoto(IntPtr ep, IntPtr photo);
+            internal static extern pxcmStatus PXCMEnhancedPhoto_SetPhoto(IntPtr ep, IntPtr photo, PXCMEnhancedPhoto.Paster.PasteType pasteMode);
 
             [DllImport(PXCMBase.DLLNAME)]
             internal static extern IntPtr PXCMEnhancedPhoto_GetPlanesMap(IntPtr ep);
-            
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern Int32 PXCMEnhancedPhoto_AddSticker(IntPtr ep, IntPtr sticker, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects);           
+
             [DllImport(PXCMBase.DLLNAME)]
             internal static extern pxcmStatus PXCMEnhancedPhoto_SetSticker(IntPtr ep, IntPtr sticker, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects);
 
             [DllImport(PXCMBase.DLLNAME)]
-            internal static extern IntPtr PXCMEnhancedPhoto_PreviewSticker(IntPtr ep);
+            internal static extern IntPtr PXCMEnhancedPhoto_PreviewSticker(IntPtr ep, Int32 stickerID);
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern pxcmStatus PXCMEnhancedPhoto_GetStickerROI(IntPtr ep, ref PXCMRectI32 roi, Int32 stickerID);
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern pxcmStatus PXCMEnhancedPhoto_UpdateSticker(IntPtr ep, Int32 stickerID, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects);
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern pxcmStatus PXCMEnhancedPhoto_RemoveSticker(IntPtr ep, Int32 stickerID);
+
+            [DllImport(PXCMBase.DLLNAME)]
+            internal static extern void PXCMEnhancedPhoto_RemoveAllStickers(IntPtr ep);
 
             [DllImport(PXCMBase.DLLNAME)]
             internal static extern IntPtr PXCMEnhancedPhoto_Paste(IntPtr ep);

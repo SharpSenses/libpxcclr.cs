@@ -245,12 +245,25 @@ public partial class PXCMEnhancedPhoto : PXCMBase
         /// outputs the enhanced depth image
         /// photo: input color, depth photo, and calibration data
         /// depthQuality: Depth fill Quality: HIGH or LOW for post or realtime processing respectively
-        /// Note: The application must release the returned enhanced depth image
+        /// Note: The application must release the returned enhanced depth photo
         /// </summary>
         public PXCMPhoto EnhanceDepth(PXCMPhoto photo, DepthFillQuality depthQuality)
         {
             IntPtr image = PXCMEnhancedPhoto_EnhanceDepth(instance, photo.instance, depthQuality);
             return image != IntPtr.Zero ? new PXCMPhoto(image, true) : null;
+        }
+
+        /// <summary> 
+        /// PreviewEnhanceDepth: enhance the depth image quality by filling holes and denoising
+        /// outputs the enhanced depth image
+        /// sample: The PXCMCapture::Sample instance from the SenseManager QuerySample().
+        /// depthQuality: Depth fill Quality: HIGH or LOW for post or realtime processing respectively
+        /// Note: The application must release the returned enhanced depth image
+        /// </summary>
+        public PXCMImage PreviewEnhanceDepth(PXCMCapture.Sample sample, DepthFillQuality depthQuality)
+        {
+            IntPtr image = PXCMEnhancedPhoto_PreviewEnhanceDepth(instance, sample, depthQuality);
+            return image != IntPtr.Zero ? new PXCMImage(image, true) : null;
         }
 
         /// <summary> 
@@ -357,16 +370,30 @@ public partial class PXCMEnhancedPhoto : PXCMBase
 
         /// <summary>
         /// PreviewCommonFOV: Matches the Field of View (FOV) of color and depth in depth photo. Useful for live stream.
-		/// Use the returned roi to crop the photo
-		/// photo: input image color+depth
-		/// rect: Output. Returns roi in color image that matches to FOV of depth image that is suitable for all photos in the live stream.
+        /// Use the returned roi to crop the photo
+        /// photo: input image color+depth
+        /// rect: Output. Returns roi in color image that matches to FOV of depth image that is suitable for all photos in the live stream.
         /// @return pxcmStatus : PXCM_STATUS_NO_ERRROR for successfu operation; PXCM_STATUS_DATA_UNAVAILABLE otherwise
-		/// </summary>
+        /// </summary>
 
-        public pxcmStatus CommonFOV(PXCMPhoto photo, out PXCMRectI32 rect)
+        public pxcmStatus PreviewCommonFOV(PXCMCapture.Sample sample, out PXCMRectI32 rect)
         {
             rect = new PXCMRectI32();
-            return PXCMEnhancedPhoto_PreviewCommonFOV(instance, photo.instance, ref rect);
+            return PXCMEnhancedPhoto_PreviewCommonFOV(instance, sample, ref rect);
+        }
+
+        /// <summary>
+        /// PreviewCommonFOV [Deprecated]: Matches the Field of View (FOV) of color and depth in depth photo. Useful for live stream.
+        /// Use the returned roi to crop the photo
+        /// photo: input image color+depth
+        /// rect: Output. Returns roi in color image that matches to FOV of depth image that is suitable for all photos in the live stream.
+        /// @return pxcStatus : PXC_STATUS_NO_ERRROR for successfu operation; PXC_STATUS_DATA_UNAVAILABLE otherwise
+        /// </summary>
+
+        public pxcmStatus PreviewCommonFOV(PXCMPhoto photo, out PXCMRectI32 rect)
+        {
+            rect = new PXCMRectI32();
+            return PXCMEnhancedPhoto_PreviewCommonFOVDeprecated(instance, photo.instance, ref rect);
         }
     };
 
@@ -481,43 +508,66 @@ public partial class PXCMEnhancedPhoto : PXCMBase
 
         /// <summary> 
         /// PasteEffects:  
-        /// matchIllumination: flag to match Illumination, default value is true		
-        /// transparency: (default) 0.0f = opaque, 1.0f = transparent sticker
-        /// embossHighFreqPass: High Frequency Pass during emboss, default 0.0f no emboss, 1.0f max	
-        /// byPixelCorrection: default false, flag to use by pixel illumination correction, takes shadows in account
-        /// colorCorrection: default false, flag to add color correction		
+        ///  matchIllumination: Matches sticker illumination to the global RGB scene. Default is true.	
+        ///	transparency: Sets Transparency level of the sticker. 0.0f = Opaque (Default); 1.0f = Transparent
+        ///	embossHighFreqPass: High Frequency Pass during emboss, default 0.0f no emboss, 1.0f max	
+        ///	shadingCorrection: Matches sticker illumination to local RGB scene, takes shadows in account. Default is false.
+        ///	colorCorrection: Flag to add color correction; Default is false.
+        ///	embossingAmplifier: Embossing Intensity Multiplier. default: 1.0f. should be positive
+        ///	skinDetection: Flag to detect skin under pasted sticker; default is false		
         /// </summary>
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public class PasteEffects
         {
-            public bool matchIllumination;/* Flag to match Illumination, Default value is true*/
-            public Single transparency; /* (Default) 0.0f = opaque, 1.0f = transparent sticker */
-            public Single embossHighFreqPass; /* High Frequency Pass during emboss, default 0.0f no emboss, 1.0f max */
-            public bool shadingCorrection; /* Default false, flag to use by pixel illumination correction, takes shadows in account */
-            public bool colorCorrection; /* Default false, flag to add color correction */
+            public bool matchIllumination; // Flag to match global Illumination, default value is true	
+            public Single transparency;    // (default) 0.0f = opaque, 1.0f = transparent sticker
+            public Single embossHighFreqPass; // Level of details to emboss, (default) 0.0f = no emboss, 1.0f =max
+            public bool shadingCorrection; // Flag to match local illumination. Default is false
+            public bool colorCorrection;     // Flag to add color correction; Default is false.
+            public Single embossingAmplifier; // Embossing Intesity Multiplier. Default is 1.0f. Should be positive
+            public bool skinDetection; // Flag to detect skin under pasted sticker; default is false
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
             internal Single[] reserved;
 
             public PasteEffects()
             {
-                reserved = new Single[6];
                 matchIllumination = true;
                 transparency = 0.0f;
                 embossHighFreqPass = 0.0f;
                 shadingCorrection = false;
                 colorCorrection = false;
+                embossingAmplifier = 1.0f;
+                skinDetection = false;
+                reserved = new Single[6];
             }
         };
 
         /// <summary> 
+        /// PasteType: Indicates whether sticker is pasted on detected planes or on any surface 
+        /// PLANE and SURFACE
+        /// </summary>
+        public enum PasteType
+        {
+            PLANE = 0,
+            SURFACE,
+        };
+
+
+        /// <summary> 
         /// SetPhoto: sets the photo that needs to be processed.
         /// photo: photo to be processed [color + depth] 
+        /// pasteMode: Indicates whether pasteOnPlane or pasteOnSurface
         /// Returns PXC_STATUS_NO_ERROR if success. PXC_STATUS_PROCESS_FAILED if process failed
         /// </summary>
+        public pxcmStatus SetPhoto(PXCMPhoto photo, PXCMEnhancedPhoto.Paster.PasteType pasteMode)
+        {
+            return PXCMEnhancedPhoto_SetPhoto(instance, photo.instance, pasteMode);
+        }
+
         public pxcmStatus SetPhoto(PXCMPhoto photo)
         {
-            return PXCMEnhancedPhoto_SetPhoto(instance, photo.instance);
+            return SetPhoto(photo, PXCMEnhancedPhoto.Paster.PasteType.PLANE);
         }
 
         /// <summary>
@@ -530,23 +580,14 @@ public partial class PXCMEnhancedPhoto : PXCMBase
             return image == IntPtr.Zero ? null : new PXCMImage(image, true);
 
         }
-        /// <summary> 
-        /// PasteEffects:  
-        /// matchIllumination: flag to match Illumination, default value is true		
-        /// transparency: (default) 0.0f = opaque, 1.0f = transparent sticker
-        /// embossHighFreqPass: High Frequency Pass during emboss, default 0.0f no emboss, 1.0f max	
-        /// byPixelCorrection: default false, flag to use by pixel illumination correction, takes shadows in account
-        /// colorCorrection: default false, flag to add color correction		
-        /// </summary>
 
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         /// <summary> 
         /// StickerData:  
-        /// coord : insertion coordinates
         /// height: sticker height in mm, default -1 auto-scale		
         /// rotation: in-plane rotation in degree, default 0	
-        /// isCenter: Anchor point. False means coordinate is top left, true means coordinate is center.
+        /// isCenter: No Longer Supported. Anchor point. True means coordinate is center. 
         /// </summary>
         public class StickerData
         {
@@ -558,12 +599,78 @@ public partial class PXCMEnhancedPhoto : PXCMBase
 
             public StickerData()
             {
-                reserved = new Single[6];
-                height = -1.0f;
+                height = 200.0f;
                 rotation = 0.0f;
-                isCenter = false;
+                isCenter = true;
+                reserved = new Single[6];
             }
         };
+
+        /// <summary> 
+        /// AddSticker: adds a sticker that will be pasted with all configurations needed and paste effects.
+        /// sticker: the image to paste onto the photo (foreground image)
+        /// coord : insertion coordinates
+        /// stickerData: the sticker size, paste location and anchor point.
+        /// pasteEffects: the pasting effects.
+        /// Returns a stickerID number that can be used as input to the UpdateSticker(), RemoveSticker(), and PreviewSticker()
+        /// functions. A negative return value indicates failure.
+        /// </summary>
+        public Int32 AddSticker(PXCMImage sticker, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects)
+        {
+            return PXCMEnhancedPhoto_AddSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
+        }
+
+        public Int32 AddSticker(PXCMImage sticker, PXCMPointI32 coord, StickerData stickerData)
+        {
+            PasteEffects pasteEffects = new PasteEffects();
+            return PXCMEnhancedPhoto_AddSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
+        }
+
+        public Int32 AddSticker(PXCMImage sticker, PXCMPointI32 coord, PasteEffects pasteEffects)
+        {
+            StickerData stickerData = new StickerData();
+            return PXCMEnhancedPhoto_AddSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
+        }
+
+        public Int32 AddSticker(PXCMImage sticker, PXCMPointI32 coord)
+        {
+            PasteEffects pasteEffects = new PasteEffects();
+            StickerData stickerData = new StickerData();
+            return PXCMEnhancedPhoto_AddSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
+        }
+
+        /// <summary>
+        /// RemoveSticker: Removes the sticker represented by stickerID
+        /// </summary>
+        /// <param name="stickerID">The stickerID for the sticker to remove.</param>
+        /// <returns>PXC_STATUS_NO_ERROR for success. PXC_STATUS_ITEM_UNAVAILABLE if the stickerID was not valid</returns>
+        public pxcmStatus RemoveSticker(Int32 stickerID)
+        {
+            return PXCMEnhancedPhoto_RemoveSticker(instance, stickerID);
+        }
+
+        /// <summary>
+        /// RemoveAllStickers: Removes all stickers from the scene. If there are no stickers
+        /// in the scene, this function has no effect.
+        /// </summary>
+        public void RemoveAllStickers()
+        {
+            PXCMEnhancedPhoto_RemoveAllStickers(instance);
+        }
+
+        /// <summary> 
+        /// UpdateSticker: Update the configuration and paste effects for the given sticker. You can pass null
+        /// for any argument that you do not wish to update.
+        /// sticker: the image to paste onto the photo (foreground image)
+        /// coord : insertion coordinates
+        /// stickerData: the sticker size, paste location and anchor point.
+        /// pasteEffects: the pasting effects.
+        /// Returns PXC_STATUS_NO_ERROR for success. Returns PXC_STATUS_ITEM_UNAVAILABLE if the stickerID was not valid
+        /// </summary>
+        public pxcmStatus UpdateSticker(Int32 stickerID, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects)
+        {
+            return PXCMEnhancedPhoto_UpdateSticker(instance, stickerID, coord, stickerData, pasteEffects);
+        }
 
         /// <summary> 
         /// SetSticker: sets the sticker that will be pasted with all configurations needed and paste effects.
@@ -573,17 +680,27 @@ public partial class PXCMEnhancedPhoto : PXCMBase
         /// pasteEffects: the pasting effects.
         /// Returns PXC_STATUS_NO_ERROR if success. PXC_STATUS_PROCESS_FAILED if process failed
         /// </summary>
+        [Obsolete("SetSticker is deprececated; Use AddSticker instead")]
         public pxcmStatus SetSticker(PXCMImage sticker, PXCMPointI32 coord, StickerData stickerData, PasteEffects pasteEffects)
         {
             return PXCMEnhancedPhoto_SetSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
         }
 
+        [Obsolete("SetSticker is deprececated; Use AddSticker instead")]
         public pxcmStatus SetSticker(PXCMImage sticker, PXCMPointI32 coord, StickerData stickerData)
         {
             PasteEffects pasteEffects = new PasteEffects();
             return PXCMEnhancedPhoto_SetSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
         }
 
+        [Obsolete("SetSticker is deprececated; Use AddSticker instead")]
+        public pxcmStatus SetSticker(PXCMImage sticker, PXCMPointI32 coord, PasteEffects pasteEffects)
+        {
+            StickerData stickerData = new StickerData();
+            return PXCMEnhancedPhoto_SetSticker(instance, sticker.instance, coord, stickerData, pasteEffects);
+        }
+
+        [Obsolete("SetSticker is deprececated; Use AddSticker instead")]
         public pxcmStatus SetSticker(PXCMImage sticker, PXCMPointI32 coord)
         {
             PasteEffects pasteEffects = new PasteEffects();
@@ -593,12 +710,25 @@ public partial class PXCMEnhancedPhoto : PXCMBase
 
         /// <summary> 
         /// PreviewSticker: returns a sticker mask showing the location of the pasted sticker.
-        /// Returns a PXCImage of the previewed sticker in a form of a mask.
+        /// Returns PXCImage with returns values of 0, 1, 2 :
+        /// 2 U 1 - region where the sticker could be pasted if there were no constraints
+        /// 1 - apropriate region to paste sticker considering constraints: e.g. plane
+        /// 0 - all other pixels
         /// </summary>
-        public PXCMImage PreviewSticker()
+        public PXCMImage PreviewSticker(Int32 stickerID = 0)
         {
-            IntPtr image = PXCMEnhancedPhoto_PreviewSticker(instance);
+            IntPtr image = PXCMEnhancedPhoto_PreviewSticker(instance, stickerID);
             return image == IntPtr.Zero ? null : new PXCMImage(image, true);
+
+        }
+        /// <summary>
+        /// GetStickerROI: Gives a bounding box showing the location of the sticker
+        /// Returns PXCM_STATUS_NO_ERROR if operation succeeds
+        /// </summary>
+        public pxcmStatus GetStickerROI(out PXCMRectI32 rect, Int32 stickerID = 0)
+        {
+            rect = new PXCMRectI32();
+            return PXCMEnhancedPhoto_GetStickerROI(instance, ref rect, stickerID);
 
         }
 
@@ -608,7 +738,6 @@ public partial class PXCMEnhancedPhoto : PXCMBase
         /// user-specified position and an auto-detected plane orientation onto the background image.
         /// The auto-oriented foreground image and the color data of the background image are composited together
         /// according to the alpha channal of the foreground image.
-        /// 
         /// Returns the embeded foreground with background image.
         /// </summary>
         public PXCMPhoto Paste()
@@ -664,13 +793,13 @@ public partial class PXCMEnhancedPhoto : PXCMBase
         /// <summary>	
         /// DistanceType: indicator whether the Two points measured lie on a the same planar surface 
         /// </summary>
-         public enum DistanceType
-         {
-         UNKNOWN = 0,
-         COPLANAR,
-         NONCOPLANAR,
-         };
-         
+        public enum DistanceType
+        {
+            UNKNOWN = 0,
+            COPLANAR,
+            NONCOPLANAR,
+        };
+
         /// <summary>
         /// This represents a point in 3D world space in millimeter (mm) units. 
         /// </summary>

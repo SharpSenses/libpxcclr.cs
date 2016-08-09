@@ -116,6 +116,7 @@ public partial class PXCMBase : IDisposable
 
     internal static PXCMBase IntPtr2PXCMBase(IntPtr instance, Int32 cuid)
     {
+        if (instance == IntPtr.Zero) return null;
         PXCMBase base1 = CUID2CTOR[cuid].Invoke(new object[] { instance, false }) as PXCMBase;
         if (base1 == null)
             return null;

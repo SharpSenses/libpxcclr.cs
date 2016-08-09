@@ -88,6 +88,7 @@ public partial class PXCMCursorData : PXCMBase
         CURSOR_COUNTER_CLOCKWISE_CIRCLE = 0x000004,  /// Cursor counter clockwise circle  - move your hand in counter clockwise circle while hand facing the camera.
         CURSOR_HAND_CLOSING = 0x000008,             /// Cursor hand closing - hold an open hand towards the camera and close your hand.
         CURSOR_HAND_OPENING = 0x000010              /// Cursor hand opening - hold a closed hand towards the camera and open your hand.
+       
     };
 
 
@@ -420,6 +421,23 @@ public partial class PXCMCursorData : PXCMBase
         IntPtr hd2;
         pxcmStatus sts = PXCMCursorData_QueryCursorDataById(instance, cursorId, out hd2);
         cursorData = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? new ICursor(hd2) : null;
+        return sts;
+    }
+   
+    /// <summary> 
+    /// Reset the adaptive point.
+    /// </summary>
+    /// <param name="cursorID"> - the unique ID of the requested cursor.</param>
+    /// <param name="resetPosition"> -  the position of the new point. should be between 0-1 in every axis.</param>
+    /// 
+    /// <returns> PXCM_STATUS_NO_ERROR - operation succeeded.</returns>
+    /// <returns> PXCM_STATUS_DATA_UNAVAILABLE  - there is no output data.</returns>
+    /// <returns> PXCM_STATUS_PARAM_UNSUPPORTED - there is no hand data for the given cursor ID. </returns>
+    /// 
+
+    public pxcmStatus ResetAdaptiveById(Int32 cursorId, PXCMPoint3DF32 resetPosition)
+    {
+        pxcmStatus sts = PXCMCursorData_ResetAdaptiveById(instance, cursorId, resetPosition);
         return sts;
     }
 

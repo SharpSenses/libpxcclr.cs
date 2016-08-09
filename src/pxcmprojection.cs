@@ -26,6 +26,21 @@ namespace intel.rssdk
 public partial class PXCMProjection : PXCMBase
 {
     new public const Int32 CUID = 0x494A8537;
+    protected const Int32 CUID_PROJECTION_CLIPPING_NONE = 0x11a4c912;
+
+    [Flags]
+    public enum ProjectionOption
+    {
+        PROJECTION_OPTION_DEFAULT = 0,
+        PROJECTION_OPTION_CLIPPING_NONE = 1,
+    };
+
+    PXCMProjection SelectOption(ProjectionOption option)
+    {
+        IntPtr instance2 = instance;
+        if (option == ProjectionOption.PROJECTION_OPTION_CLIPPING_NONE) instance2 = PXCMBase_QueryInstance(instance, CUID_PROJECTION_CLIPPING_NONE);
+        return (PXCMProjection)IntPtr2PXCMBase(instance2, CUID);
+    }
 
     /* Member Functions */
 

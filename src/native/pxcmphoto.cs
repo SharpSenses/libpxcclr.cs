@@ -29,7 +29,7 @@ namespace intel.rssdk
         internal static extern pxcmStatus PXCMPhoto_LoadXDM(IntPtr photo, String filename, Subsample subsample);
 
         [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
-        internal static extern pxcmStatus PXCMPhoto_SaveXDM(IntPtr photo, String filename);
+        internal static extern pxcmStatus PXCMPhoto_SaveXDM(IntPtr photo, String filename, Boolean removeOriginalImage);
 
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern pxcmStatus PXCMPhoto_CopyPhoto(IntPtr photo, IntPtr source);

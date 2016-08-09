@@ -38,6 +38,23 @@ namespace intel.rssdk
 
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern pxcmStatus PXCMVideoModule_ProcessImageAsync(IntPtr module, PXCMCapture.Sample sample, out IntPtr sp);
+    
+        /**
+            @brief Pass projection object for mappings between color and depth coordinate systems
+            @param[in] projection       The projection object.
+        */
+        [DllImport(PXCMBase.DLLNAME)]
+        internal static extern void PXCMVideoModule_SetProjection(IntPtr module, IntPtr proj);
+
+        /**
+            @brief enables GPU processing controls
+            @param[in] enable is a bool that enables a specific taskId on GPU.
+		    @param[in] taskId provides more fine-grained controls on which task would be enbled on GPU.
+		    default is -1, meaning that all tasks are enabled on GPU. 
+        */
+        [DllImport(PXCMBase.DLLNAME)]
+        internal static extern void PXCMVideoModule_SetGPUExec(IntPtr module, Boolean enable, Int32 taskId);
+    
     };
 
 #if RSSDK_IN_NAMESPACE
