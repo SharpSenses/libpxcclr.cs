@@ -28,7 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;SAMPLEDX_CUSTOMIZATION</DefineConstants>
+    <DefineConstants>TRACE;SAMPLEDX_CUSTOMIZATION;PT_MW_DEV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -56,6 +56,8 @@
     <Compile Include="src\native\pxcmcapture.cs" />
     <Compile Include="src\native\pxcmcapturemanager.cs" />
     <Compile Include="src\native\pxcmcontourextractor.cs" />
+    <Compile Include="src\native\pxcmcursorconfiguration.cs" />
+    <Compile Include="src\native\pxcmcursordata.cs" />
     <Compile Include="src\native\pxcmdatasmoothing.cs" />
     <Compile Include="src\native\pxcmenhancedphoto.cs" />
     <Compile Include="src\native\pxcmenhancedvideo.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="src\native\pxcmfacedata.cs" />
     <Compile Include="src\native\pxcmfacemodule.cs" />
     <Compile Include="src\native\pxcmhandconfiguration.cs" />
+    <Compile Include="src\native\pxcmhandcursormodule.cs" />
     <Compile Include="src\native\pxcmhanddata.cs" />
     <Compile Include="src\native\pxcmhandmodule.cs" />
     <Compile Include="src\native\pxcmimage-bitmap.cs" />
@@ -107,6 +110,8 @@
     <Compile Include="src\pxcmcapture.cs" />
     <Compile Include="src\pxcmcapturemanager.cs" />
     <Compile Include="src\pxcmcontourextractor.cs" />
+    <Compile Include="src\pxcmcursorconfiguration.cs" />
+    <Compile Include="src\pxcmcursordata.cs" />
     <Compile Include="src\pxcmdatasmoothing.cs" />
     <Compile Include="src\pxcmdefs.cs" />
     <Compile Include="src\pxcmdefs.extensions.cs" />
@@ -116,6 +121,7 @@
     <Compile Include="src\pxcmfacedata.cs" />
     <Compile Include="src\pxcmfacemodule.cs" />
     <Compile Include="src\pxcmhandconfiguration.cs" />
+    <Compile Include="src\pxcmhandcursormodule.cs" />
     <Compile Include="src\pxcmhanddata.cs" />
     <Compile Include="src\pxcmhandmodule.cs" />
     <Compile Include="src\pxcmimage-writeablebitmap.cs" />

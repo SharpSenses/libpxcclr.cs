@@ -20,14 +20,20 @@ namespace intel.rssdk
     {
         new public const Int32 CUID = 0x44334146;
 
-        /* create a new copy of active configuration */
+        /// <summary>
+        /// create a new copy of active configuration
+        /// </summary>
+        /// <returns></returns>
         public PXCMFaceConfiguration CreateActiveConfiguration()
         {
             IntPtr cfg = PXCMFaceModule_CreateActiveConfiguration(instance);
             return cfg == IntPtr.Zero ? null : new PXCMFaceConfiguration(maps, cfg, true);
         }
 
-        /* create a placeholder for output */
+        /// <summary>
+        /// create a placeholder for output
+        /// </summary>
+        /// <returns></returns>
         public PXCMFaceData CreateOutput()
         {
             IntPtr data = PXCMFaceModule_CreateOutput(instance);

@@ -1,35 +1,43 @@
 /*******************************************************************************
 
-INTEL CORPORATION PROPRIETARY INFORMATION
-This software is supplied under the terms of a license agreement or nondisclosure
-agreement with Intel Corporation and may not be copied or disclosed except in
-accordance with the terms of that agreement
-Copyright(c) 2013-2015 Intel Corporation. All Rights Reserved.
+  INTEL CORPORATION PROPRIETARY INFORMATION
+  This software is supplied under the terms of a license agreement or nondisclosure
+  agreement with Intel Corporation and may not be copied or disclosed except in
+  accordance with the terms of that agreement
+  Copyright(c) 2013-2015 Intel Corporation. All Rights Reserved.
 
-*******************************************************************************/
+ *******************************************************************************/
 using System;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 #if RSSDK_IN_NAMESPACE
 namespace intel.rssdk {
 #endif
 
-public partial class PXCM3DScan: PXCMBase {
-    new public const Int32 CUID=0x31494353;
+public partial class PXCM3DScan : PXCMBase
+{
+    new public const Int32 CUID = 0x31494353;
 
     public delegate void OnAlertDelegate(PXCM3DScan.AlertData data);
 
+    /// <summary>
     /// Reconstruction options
+    /// </summary>
     [Flags]
-    public enum ReconstructionOption: int { /// Bit-OR'ed values
-        NONE           = 0,
+    public enum ReconstructionOption : int
+    { /// Bit-OR'ed values
+        NONE = 0,
         SOLIDIFICATION = (1 << 0), // Generate a closed manifold mesh.
-        TEXTURE        = (1 << 1), // Disable vertex color, generate texture map (.jpg), uv coordinates and material (.mtl) files.
-        LANDMARKS      = (1 << 2), // Use face module generate output landmark data file (.json) relative to mesh.
+        TEXTURE = (1 << 1), // Disable vertex color, generate texture map (.jpg), uv coordinates and material (.mtl) files.
+        LANDMARKS = (1 << 2), // Use face module generate output landmark data file (.json) relative to mesh.
     };
 
+    /// <summary>
     /// Scanning modes
-    public enum ScanningMode {
+    /// </summary>
+    public enum ScanningMode
+    {
         VARIABLE = 0,                        // Fixed (in this release) to the largest scanning area per camera
         OBJECT_ON_PLANAR_SURFACE_DETECTION,  // Scanning area is auto-fit to detected object, surface is removed automaticaly
         FACE,                                // Fixed scanning size for scanning human faces.
@@ -37,18 +45,21 @@ public partial class PXCM3DScan: PXCMBase {
         BODY                                 // Fixed scanning size for scanning human body (with arms at sides)
     };
 
-    /// Configuration structure
+    /// <summary>
+    ///  Configuration structure
+    /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public class Configuration {
-        [MarshalAs(UnmanagedType.Bool)] 
-        public Boolean              startScan;
-        public ScanningMode         mode;
+    public class Configuration
+    {
+        [MarshalAs(UnmanagedType.Bool)]
+        public Boolean startScan;
+        public ScanningMode mode;
         public ReconstructionOption options;
-        public Int32                maxTriangles;
-        public Int32                maxVertices;
+        public Int32 maxTriangles;
+        public Int32 maxVertices;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 63)]
-        public Int32[]              reserved;
+        public Int32[] reserved;
 
         public Configuration()
         {
@@ -56,9 +67,9 @@ public partial class PXCM3DScan: PXCMBase {
         }
     };
 
-   /// <summary>
-   /// Query the current PXCM3DScan Configuration
-   /// </summary>
+    /// <summary>
+    /// Query the current PXCM3DScan Configuration
+    /// </summary>
     /// <returns> PXCM3DScan Configuration object </returns>
     public Configuration QueryConfiguration()
     {
@@ -77,13 +88,15 @@ public partial class PXCM3DScan: PXCMBase {
         return PXCM3DScan_SetConfiguration(instance, config);
     }
 
-    /// Area structure
+    /// <summary>
+    ///  Area structure
+    /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public class Area
     {
         public PXCMSize3DF32 shape;      // Scanning volume (width, height, depth) in camera space (m). Set to zero (0) to auto select.
-        public Int32         resolution; // Voxel resolution (along longest shape axis). Set to zero (0) to auto select.
+        public Int32 resolution; // Voxel resolution (along longest shape axis). Set to zero (0) to auto select.
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
         public Int32[] reserved;
 
@@ -93,7 +106,10 @@ public partial class PXCM3DScan: PXCMBase {
         }
     };
 
+    /// <summary>
     /// Query the current PXC3DScan Area
+    /// </summary>
+    /// <returns></returns>
     public Area QueryArea()
     {
         Area area = new Area();
@@ -101,27 +117,35 @@ public partial class PXCM3DScan: PXCMBase {
         return area;
     }
 
-    /// Set the PXC3DScan Area
+    /// <summary>
+    ///  Set the PXC3DScan Area
+    /// </summary>
+    /// <param name="area"></param>
+    /// <returns></returns>
     public pxcmStatus SetArea(Area area)
     {
         return PXCM3DScan_SetArea(instance, area);
-    } 
+    }
 
     /// <summary>
-    /// <para> PXC3DScan preview image access </para>
-    /// <para> The preview image is a rendered approximation of the scanning volume </para>
-    /// <para> from the perspective of the camera. A different image is available </para>
-    /// <para> each time a frame is processed. </para>
+    ///  PXC3DScan preview image access 
+    ///  The preview image is a rendered approximation of the scanning volume 
+    ///  from the perspective of the camera. A different image is available 
+    ///  each time a frame is processed. 
     /// </summary>
     /// <returns> A privew image </returns>
-    public PXCMImage AcquirePreviewImage() {
-        IntPtr image=PXCM3DScan_AcquirePreviewImage(instance);
-        if (image==IntPtr.Zero) return null;
+    public PXCMImage AcquirePreviewImage()
+    {
+        IntPtr image = PXCM3DScan_AcquirePreviewImage(instance);
+        if (image == IntPtr.Zero) return null;
         return new PXCMImage(image, true);
     }
 
+    /// <summary>
     /// Return the visible extent from the perspective of the most recent frame.
     /// Values are in normalized coordinates (0.0-1.0).
+    /// </summary>
+    /// <returns></returns>
     public PXCMRectF32 QueryBoundingBox()
     {
         PXCMRectF32 rect = new PXCMRectF32();
@@ -130,44 +154,81 @@ public partial class PXCM3DScan: PXCMBase {
     }
 
 
-    /// Determine if the scan has started
+    /// <summary>
+    ///  Determine if the scan has started
+    /// </summary>
+    /// <returns></returns>
     public Boolean IsScanning()
     {
         return PXCM3DScan_IsScanning(instance);
     }
 
-    /// PXC3DScan mesh formats supported by Reconstruct
-    public enum FileFormat { 
-        OBJ, 
-        PLY, 
-        STL 
+    /// <summary>
+    ///  PXC3DScan mesh formats supported by Reconstruct
+    /// </summary>
+    public enum FileFormat
+    {
+        OBJ,
+        PLY,
+        STL
     };
 
-    /// PXC3DScan generation of standard mesh formats from the scanning volume.
-    public pxcmStatus Reconstruct(FileFormat type, String filename) {
+    /// <summary>
+    ///  PXC3DScan generation of standard mesh formats from the scanning volume.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="filename"></param>
+    /// <returns></returns>
+    public pxcmStatus Reconstruct(FileFormat type, String filename)
+    {
         return PXCM3DScan_Reconstruct(instance, type, filename);
     }
 
-    /// PXC3DScan utility to convert FileFormat value to a string
-    public static String FileFormatToString(FileFormat format) {
-        switch (format) {
-        case FileFormat.OBJ: return "obj";
-        case FileFormat.PLY: return "ply";
-        case FileFormat.STL: return "stl";
+    /// <summary>
+    ///  PXC3DScan utility to convert FileFormat value to a string
+    /// </summary>
+    /// <param name="format"></param>
+    /// <returns></returns>
+    public static String FileFormatToString(FileFormat format)
+    {
+        switch (format)
+        {
+            case FileFormat.OBJ: return "obj";
+            case FileFormat.PLY: return "ply";
+            case FileFormat.STL: return "stl";
         }
         return "Unknown";
     }
 
-    /* constructors and misc */
+    internal class EventMaps
+    {
+        internal Object alert = null;
+        internal Object cs = new Object();
+    };
+
+    internal EventMaps maps;
+
+    /// <summary>
+    ///  constructors and misc
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <param name="delete"></param>
     internal PXCM3DScan(IntPtr instance, Boolean delete)
         : base(instance, delete)
     {
+        maps = new EventMaps();
     }
 
-    /**
-        @enum AlertEvent
-        Enumeratea all supported alert events.
-    */
+    internal PXCM3DScan(EventMaps maps, IntPtr instance, Boolean delete)
+        : base(instance, delete)
+    {
+        this.maps = maps;
+    }
+
+    /// <summary>
+    /// AlertEvent
+    /// Enumeratea all supported alert events.
+    /// </summary>
     [Flags]
     public enum AlertEvent
     {
@@ -215,10 +276,10 @@ public partial class PXCM3DScan: PXCMBase {
         ALERT_FACE_PITCH_TOO_FAR_DOWN,
     };
 
-    /**
-        @struct AlertData
-        Describe the alert parameters.
-    */
+    /// <summary>
+    /// AlertData
+    /// Describe the alert parameters.
+    /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public class AlertData
@@ -233,6 +294,7 @@ public partial class PXCM3DScan: PXCMBase {
             reserved = new Int32[5];
         }
     }
+
 
     public void Subscribe(OnAlertDelegate d)
     {

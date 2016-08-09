@@ -28,29 +28,23 @@ namespace intel.rssdk {
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern pxcmStatus PXCMTrackerUtils_Cancel3DMapExtension(IntPtr util);
 
-        [DllImport(PXCMBase.DLLNAME)]
+        [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
         internal static extern pxcmStatus PXCMTrackerUtils_Load3DMap(IntPtr util, String filename);
 
-        [DllImport(PXCMBase.DLLNAME)]
+        [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
         internal static extern pxcmStatus PXCMTrackerUtils_Save3DMap(IntPtr util, String filename);
 
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern Int32 PXCMTrackerUtils_QueryNumberFeaturePoints(IntPtr util);
 
         [DllImport(PXCMBase.DLLNAME)]
-        internal static extern Int32 PXCMTrackerUtils_QueryFeaturePoints(IntPtr util, Int32 size, out IntPtr ppoints, Boolean returnActive, Boolean returnInactive);
+        internal static extern Int32 PXCMTrackerUtils_QueryFeaturePoints(IntPtr util, Int32 size, [Out] PXCMPoint3DF32[] ppoints, [MarshalAs(UnmanagedType.Bool)] Boolean returnActive, [MarshalAs(UnmanagedType.Bool)] Boolean returnInactive);
 
         internal static Int32 QueryFeaturePointsINT(IntPtr util, Int32 size, PXCMPoint3DF32[] points, Boolean returnActive, Boolean returnInactive)
         {
             if (size == 0 || points==null) return 0;
-
-            IntPtr ppoints = IntPtr.Zero;
-            Int32 numPoints = PXCMTrackerUtils_QueryFeaturePoints(util, size, out ppoints, returnActive, returnInactive);
-            for (int i = 0; i < Math.Min(size, numPoints); i++)
-            {
-                Marshal.PtrToStructure(ppoints, points[i]);
-                ppoints = new IntPtr(ppoints.ToInt64() + Marshal.SizeOf(typeof(PXCMPoint3DF32)));
-            }
+           
+            Int32 numPoints = PXCMTrackerUtils_QueryFeaturePoints(util, size, points, returnActive, returnInactive);
             return Math.Min(size, numPoints);
         }
 
@@ -73,7 +67,7 @@ namespace intel.rssdk {
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern Int32      PXCMTrackerUtils_QueryCalibrationProgress(IntPtr util);
 
-        [DllImport(PXCMBase.DLLNAME)]
+        [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
         internal static extern pxcmStatus PXCMTrackerUtils_SaveCameraParametersToFile(IntPtr util, String filename);
  
     };

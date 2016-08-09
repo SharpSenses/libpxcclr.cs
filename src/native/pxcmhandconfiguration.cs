@@ -272,9 +272,7 @@ namespace intel.rssdk
         [DllImport(DLLNAME)]
         internal static extern Int32 PXCMHandConfiguration_QueryDefaultAge(IntPtr instance);
 
-        [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern Boolean PXCMHandConfiguration_IsTrackingModeEnabled(IntPtr instance, PXCMHandData.TrackingModeType trackingMode);
+      
         
     };
 

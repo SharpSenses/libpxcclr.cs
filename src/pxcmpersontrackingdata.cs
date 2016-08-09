@@ -1,12 +1,12 @@
 /*******************************************************************************
 
-INTEL CORPORATION PROPRIETARY INFORMATION
-This software is supplied under the terms of a license agreement or non-disclosure
-agreement with Intel Corporation and may not be copied or disclosed except in
-accordance with the terms of that agreement
-Copyright(c) 2015 Intel Corporation. All Rights Reserved.
+  INTEL CORPORATION PROPRIETARY INFORMATION
+  This software is supplied under the terms of a license agreement or non-disclosure
+  agreement with Intel Corporation and may not be copied or disclosed except in
+  accordance with the terms of that agreement
+  Copyright(c) 2015 Intel Corporation. All Rights Reserved.
 
-*******************************************************************************/
+ *******************************************************************************/
 using System;
 using System.Runtime.InteropServices;
 
@@ -20,9 +20,10 @@ public partial class PXCMPersonTrackingData : PXCMBase
 {
     new public const Int32 CUID = 0x44544f50;
 
-    /** @enum AlertType
-        Identifiers for the events that can be detected and fired by the person module.
-    */
+    /// <summary>  
+    /// AlertType
+    /// Identifiers for the events that can be detected and fired by the person module.
+    /// </summary>
     [Flags]
     public enum AlertType
     {
@@ -33,23 +34,25 @@ public partial class PXCMPersonTrackingData : PXCMBase
         ALERT_PERSON_TOO_FAR = 0X0010
     };
 
-    /** 
-        @enum AccessOrderType
-        Orders in which the person can be accessed.
-    */
+    /// <summary> 
+    /// AccessOrderType
+    /// Orders in which the person can be accessed.
+    /// </summary>
     [Flags]
     public enum AccessOrderType
     {
-        ACCESS_ORDER_BY_ID = 0,			/// By unique ID of the person  
-        ACCESS_ORDER_BY_TIME, 			/// From oldest to newest person in the scene           
-        ACCESS_ORDER_NEAR_TO_FAR,		/// From nearest to farthest person in scene
-        ACCESS_ORDER_LEFT_TO_RIGHT	    /// Ordered from left to right in scene
+        ACCESS_ORDER_BY_ID = 0,			/// By unique ID of the person
+#if PT_MW_DEV
+						   ACCESS_ORDER_BY_TIME, 			/// From oldest to newest person in the scene           
+						   ACCESS_ORDER_NEAR_TO_FAR,		/// From nearest to farthest person in scene
+						   ACCESS_ORDER_LEFT_TO_RIGHT	    /// Ordered from left to right in scene
+#endif
     };
 
-    /**
-		@enum TrackingState
-		The current state of the module, either tracking specific people or performing full detection
-	*/
+    /// <summary>
+    /// TrackingState
+    /// The current state of the module, either tracking specific people or performing full detection
+    /// </summary>
     [Flags]
     public enum TrackingState
     {
@@ -101,99 +104,99 @@ public partial class PXCMPersonTrackingData : PXCMBase
 
 
 #if PT_MW_DEV
-    public partial class PersonPose
-    {
-        /** 
-            @enum Position
-            Describes the position of the person
-        */
-        [Flags]
-        public enum PositionState
-        {
-            POSITION_LYING_DOWN = 0,
-            POSITION_SITTING,
-            POSITION_CROUCHING,
-            POSITION_STANDING,
-            POSITION_JUMPING
-        };
+		public partial class PersonPose
+		{
+			/// <summary> 
+			/// Position
+			/// Describes the position of the person
+			/// </summary>
+			[Flags]
+				public enum PositionState
+				{
+					POSITION_LYING_DOWN = 0,
+							    POSITION_SITTING,
+							    POSITION_CROUCHING,
+							    POSITION_STANDING,
+							    POSITION_JUMPING
+				};
 
-        [Serializable]
-        [StructLayout(LayoutKind.Sequential)]
-        public class PositionInfo
-        {
-            public PositionState position;
-            public Int32 confidence;
-        };
+			[Serializable]
+				[StructLayout(LayoutKind.Sequential)]
+				public class PositionInfo
+				{
+					public PositionState position;
+					public Int32 confidence;
+				};
 
-        [Serializable]
-        [StructLayout(LayoutKind.Sequential)]
-        public class LeanInfo
-        {
-            public PoseEulerAngles leanData;
-            public Int32 confidence;
-        };
+			[Serializable]
+				[StructLayout(LayoutKind.Sequential)]
+				public class LeanInfo
+				{
+					public PoseEulerAngles leanData;
+					public Int32 confidence;
+				};
 
-        /**
-            @brief Get the person's position data
-            @param[out] position describes the person's position
-            @param[out] confidence is the algorithm's confidence in the determined position
-        */
-        public void QueryPositionState(PositionInfo position)
-        {
-            position = PXCMPersonTrackingData_PersonPose_QueryPositionState(instance);
-        }
+			/// <summary>
+			/// Get the person's position data
+			/// </summary>
+            /// <param name="position"> describes the person's position</param>
+			/// <param name="confidence"> is the algorithm's confidence in the determined position</param>
+			public void QueryPositionState(PositionInfo position)
+			{
+				position = PXCMPersonTrackingData_PersonPose_QueryPositionState(instance);
+			}
 
-        /**
-            @brief Get the direction a person is leaning towards
-            @param[out] leanData describes where the person is leaning to in terms of yaw, pitch, and roll
-            @param[out] confidence is the algorithm's confidence in the determined orientation
-        */
-        public void QueryLeanData(LeanInfo leanInfo)
-        {
-            PXCMPersonTrackingData_PersonPose_QueryLeanData(instance, leanInfo);
-        }
+			/// <summary>
+			/// Get the direction a person is leaning towards
+			/// </summary>
+			/// <param name="leanData"> describes where the person is leaning to in terms of yaw, pitch, and roll</param>
+			/// <param name="confidence"> is the algorithm's confidence in the determined orientation</param>
+			public void QueryLeanData(LeanInfo leanInfo)
+			{
+				PXCMPersonTrackingData_PersonPose_QueryLeanData(instance, leanInfo);
+			}
 
-        private IntPtr instance;
-        public PersonPose(IntPtr instance)
-        {
-            this.instance = instance;
-        }
-    }
+			private IntPtr instance;
+			public PersonPose(IntPtr instance)
+			{
+				this.instance = instance;
+			}
+		}
 #endif
 
     public partial class PersonRecognition
-	{
-		/**
-		@brief Register a user in the Recognition database.
-		@return The unique user ID assigned to the registered recognition by the Recognition module.
-		*/
-		public Int32 RegisterUser()
+    {
+        /// <summary>
+        /// Register a user in the Recognition database.
+        /// </summary>
+        /// <returns> The unique user ID assigned to the registered recognition by the Recognition module.</returns>
+        public Int32 RegisterUser()
         {
             return PXCMPersonTrackingData_PersonRecognition_RegisterUser(instance);
         }
 
-		/**
-		@brief Removes a user from the Recognition database.
-		*/
-		public void UnregisterUser()
+        /// <summary>
+        /// Removes a user from the Recognition database.
+        /// </summary>
+        public void UnregisterUser()
         {
             PXCMPersonTrackingData_PersonRecognition_UnregisterUser(instance);
         }
 
-		/**
-		@brief Checks if a user is registered in the Recognition database.
-		@return true - if user is in the database, false otherwise.
-		*/
-		public Boolean IsRegistered()
+        /// <summary>
+        /// Checks if a user is registered in the Recognition database.
+        /// </summary>
+        /// <returns> true - if user is in the database, false otherwise.</returns>
+        public Boolean IsRegistered()
         {
             return PXCMPersonTrackingData_PersonRecognition_IsRegistered(instance);
         }
 
-		/**
-		@brief Returns the ID assigned to the current recognition by the Recognition module
-		@return The ID assigned by the Recognition module, or -1 if person was not recognized.
-		*/
-		public Int32 QueryRecognitionID()
+        /// <summary>
+        /// Returns the ID assigned to the current recognition by the Recognition module
+        /// </summary>
+        /// <returns> The ID assigned by the Recognition module, or -1 if person was not recognized.</returns>
+        public Int32 QueryRecognitionID()
         {
             return PXCMPersonTrackingData_PersonRecognition_QueryRecognitionID(instance);
         }
@@ -203,31 +206,33 @@ public partial class PXCMPersonTrackingData : PXCMBase
         {
             this.instance = instance;
         }
-	};
+    };
 
     public partial class RecognitionModuleData
-	{
-		/**
-		    @brief Retrieves the size of the recognition database for the user to be able to allocate the db buffer in the correct size
-		    @return The size of the database in bytes.
-		*/
-		public Int32 QueryDatabaseSize() {
+    {
+        /// <summary>
+        /// Retrieves the size of the recognition database for the user to be able to allocate the db buffer in the correct size
+        /// </summary>
+        /// <returns> The size of the database in bytes.</returns>
+        public Int32 QueryDatabaseSize()
+        {
             return PXCMPersonTrackingData_RecognitionModuleData_QueryDatabaseSize(instance);
         }
 
-		/**
-		    @brief Copies the recognition database buffer to the user. Allows user to store it for later usage.
-		    @param[in] buffer A user allocated buffer to copy the database into. The user must make sure the buffer is large enough (can be determined by calling QueryDatabaseSize()).
-		    @return true if database has been successfully copied to db. false - otherwise.
-		*/
-		public Boolean QueryDatabaseBuffer(byte[] buffer) {
-            return QueryDatabaseBufferINT(instance, out buffer);
+        /// <summary>
+        /// Copies the recognition database buffer to the user. Allows user to store it for later usage.
+        /// </summary>
+        /// <param name="buffer"> A user allocated buffer to copy the database into. The user must make sure the buffer is large enough (can be determined by calling QueryDatabaseSize()).</param>
+        /// <returns> true if database has been successfully copied to db. false - otherwise.</returns>
+        public Boolean QueryDatabaseBuffer(byte[] buffer)
+        {
+            return QueryDatabaseBufferINT(instance, buffer);
         }
 
-		/**
-		    @brief Unregisters a user from the database by user ID
-		    @param[in] the ID of the user to unregister
-		*/
+        /// <summary>
+        /// Unregisters a user from the database by user ID
+        /// <param name="the"> ID of the user to unregister</param>
+        /// </summary>
         public void UnregisterUserByID(Int32 userID)
         {
             PXCMPersonTrackingData_RecognitionModuleData_UnregisterUserByID(instance, userID);
@@ -238,14 +243,14 @@ public partial class PXCMPersonTrackingData : PXCMBase
         {
             this.instance = instance;
         }
-	};
+    };
 
     public partial class PersonJoints
     {
-        /** 
-            @enum Position
-            Describes the position of the person
-        */
+        /// <summary> 
+        /// Position
+        /// Describes the position of the person
+        /// </summary>
         [Flags]
         public enum JointType
         {
@@ -310,9 +315,9 @@ public partial class PXCMPersonTrackingData : PXCMBase
             }
         };
 
-        /**
-            @brief Returns the number of tracked joints
-        */
+        /// <summary>
+        /// Returns the number of tracked joints
+        /// </summary>
         public Int32 QueryNumJoints()
         {
             return PXCMPersonTrackingData_PersonJoints_QueryNumJoints(instance);
@@ -320,33 +325,33 @@ public partial class PXCMPersonTrackingData : PXCMBase
 
 
 #if PT_MW_DEV
-        /**
-            @brief Retrieves all joints
-            @param[out] joints the joints' locations are copied into this array. The application is expected to allocate this array (size retrieved from QueryNumJoints())
-            Returns true if data and parameters exists, false otherwise.
-        */
-        public Boolean QueryJoints(SkeletonPoint[] joints)
-        {
-            return QueryJointsINT(instance, out joints);
-        }
+			/// <summary>
+			/// Retrieves all joints
+			/// </summary>
+            /// <param name="joints"> the joints' locations are copied into this array. The application is expected to allocate this array (size retrieved from QueryNumJoints())</param>
+			/// Returns true if data and parameters exists, false otherwise.
+			public Boolean QueryJoints(SkeletonPoint[] joints)
+			{
+				return QueryJointsINT(instance, out joints);
+			}
 
-        /**
-            @brief Returns the number of tracked bones
-        */
-        public Int32 QueryNumBones()
-        {
-            return PXCMPersonTrackingData_PersonJoints_QueryNumBones(instance);
-        }
+			/// <summary>
+			/// Returns the number of tracked bones
+			/// </summary>
+			public Int32 QueryNumBones()
+			{
+				return PXCMPersonTrackingData_PersonJoints_QueryNumBones(instance);
+			}
 
-        /**
-            @brief Retrieves all bones
-            @param[out] bones the bones' locations are copied into this array. The application is expected to allocate this array (size retrieved from QueryNumBones())
-            Returns true if data and parameters exists, false otherwise.
-        */
-        public Boolean QueryBones(Bone[] bones)
-        {
-            return QueryBonesINT(instance, out bones);
-        }
+			/// <summary>
+			/// Retrieves all bones
+			/// </summary>
+            /// <param name="bones"> the bones' locations are copied into this array. The application is expected to allocate this array (size retrieved from QueryNumBones())</param>
+			/// Returns true if data and parameters exists, false otherwise.
+			public Boolean QueryBones(Bone[] bones)
+			{
+				return QueryBonesINT(instance, out bones);
+			}
 #endif
 
         private IntPtr instance;
@@ -388,8 +393,8 @@ public partial class PXCMPersonTrackingData : PXCMBase
         public class PointCombined
         {
             public PointInfo image;
-			public PointInfo world;
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
+            public PointInfo world;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
             internal Int32[] reserved;
 
             public PointCombined()
@@ -398,26 +403,26 @@ public partial class PXCMPersonTrackingData : PXCMBase
             }
         };
 
-        /**	
-            @brief Return the person's unique identifier.
-        */
+        /// <summary>	
+        /// Return the person's unique identifier.
+        /// </summary>
         public Int32 QueryId()
         {
             return PXCMPersonTrackingData_PersonTracking_QueryId(instance);
         }
 
-        /**	
-             @brief Return the location and dimensions of the tracked person, represented by a 2D bounding box (defined in pixels).
-         */
+        /// <summary>	
+        /// Return the location and dimensions of the tracked person, represented by a 2D bounding box (defined in pixels).
+        /// </summary>
         public BoundingBox2D Query2DBoundingBox()
         {
             return Query2DBoundingBoxINT(instance);
         }
 
 
-        /**			
-            @brief Retrieve the 2D image mask of the tracked person. 	 			
-        */
+        /// <summary>			
+        /// Retrieve the 2D image mask of the tracked person. 	 			
+        /// </summary>
         public PXCMImage QuerySegmentationImage()
         {
             IntPtr image2 = PXCMPersonTrackingData_PersonTracking_QuerySegmentationImage(instance);
@@ -425,75 +430,82 @@ public partial class PXCMPersonTrackingData : PXCMBase
         }
 
 
-        /** 
-            @brief Retrieves the center mass of the tracked person
-            @param[out] centerMass The center mass of the tracked person in world coordinates
-            @param[out] confidence The confidence of the calculated center mass location
-        */
+        /// <summary> 
+        /// Retrieves the center mass of the tracked person
+        /// </summary>
+        /// <param name="centerMass"> The center mass of the tracked person in world coordinates</param>
+        /// <param name="confidence"> The confidence of the calculated center mass location</param>
         public PointCombined QueryCenterMass()
         {
-            return PXCMPersonTrackingData_PersonTracking_QueryCenterMass(instance);
+            return QueryCenterMassINT(instance);
         }
 
-        /**	
-             @brief Return the location and dimensions of the tracked person's head, represented by a 2D bounding box (defined in pixels).
-         */
+        /// <summary>	
+        /// Return the location and dimensions of the tracked person's head, represented by a 2D bounding box (defined in pixels).
+        /// </summary>
         public BoundingBox2D QueryHeadBoundingBox()
         {
             return QueryHeadBoundingBoxINT(instance);
         }
 
+        public PXCMImage QueryBlobMask()
+        {
+            IntPtr image = PXCMPersonTrackingData_PersonTracking_QueryBlobMask(instance);
+            return image != IntPtr.Zero ? new PXCMImage(image, true) : null;
+        }
+
+
 #if PT_MW_DEV
-        /**
-            @brief Return the location and dimensions of the tracked person, represented by a 3D bounding box.
-        */
-        public BoundingBox3D Query3DBoundingBox()
-        {
-            return Query3DBoundingBoxINT(instance);
-        }
+			/// <summary>
+			/// Return the location and dimensions of the tracked person, represented by a 3D bounding box.
+			/// </summary>
+			public BoundingBox3D Query3DBoundingBox()
+			{
+				return Query3DBoundingBoxINT(instance);
+			}
 
-        /**
-          @brief Return the speed of person in 3D world coordinates
-          @param[out] direction the direction of the movement
-          @param[out] magnitude the magnitude of the movement in meters/second
-        */
-        public void QuerySpeed(SpeedInfo speed)
-        {
-            PXCMPersonTrackingData_PersonTracking_QuerySpeed(instance, ref speed);
-        }
+			/// <summary>
+			/// Return the speed of person in 3D world coordinates
+			/// </summary>
+            /// <param name="direction"> the direction of the movement</param>
+			/// <param name="magnitude"> the magnitude of the movement in meters/second</param>
+			public void QuerySpeed(SpeedInfo speed)
+			{
+				PXCMPersonTrackingData_PersonTracking_QuerySpeed(instance, ref speed);
+			}
 
-        /** 
-            @brief Get the number of pixels in the blob
-        */
-        public Int32 Query3DBlobPixelCount()
-        {
-            return PXCMPersonTrackingData_PersonTracking_Query3DBlobPixelCount(instance);
-        }
+			/// <summary> 
+			/// Get the number of pixels in the blob
+			/// </summary>
+			public Int32 Query3DBlobPixelCount()
+			{
+				return PXCMPersonTrackingData_PersonTracking_Query3DBlobPixelCount(instance);
+			}
 
-        /**
-            @brief Retrieves the 3d blob of the tracked person
-            @param[out] blob The array of 3d points to which the blob will be copied. Must be allocated by the application
-        */
-        public pxcmStatus Query3dBlob(PXCMPoint3DF32 blob)
-        {
-            return PXCMPersonTrackingData_PersonTracking_Query3DBlob(instance, ref blob);
-        }
+			/// <summary>
+			/// Retrieves the 3d blob of the tracked person
+			/// </summary>
+            /// <param name="blob"> The array of 3d points to which the blob will be copied. Must be allocated by the application</param>
+			public pxcmStatus Query3dBlob(PXCMPoint3DF32 blob)
+			{
+				return PXCMPersonTrackingData_PersonTracking_Query3DBlob(instance, ref blob);
+			}
 
-        /** 
-            @brief Get the contour size (number of points in the contour)
-        */
-        public Int32 QueryContourSize()
-        {
-            return PXCMPersonTrackingData_PersonTracking_QueryContourSize(instance);
-        }
+			/// <summary> 
+			/// Get the contour size (number of points in the contour)
+			/// </summary>
+			public Int32 QueryContourSize()
+			{
+				return PXCMPersonTrackingData_PersonTracking_QueryContourSize(instance);
+			}
 
-        /** 
-            @brief Get the data of the contour line
-        */
-        public pxcmStatus QueryContourPoints(PXCMPointI32 contour)
-        {
-            return PXCMPersonTrackingData_PersonTracking_QueryContourPoints(instance, ref contour);
-        }
+			/// <summary> 
+			/// Get the data of the contour line
+			/// </summary>
+			public pxcmStatus QueryContourPoints(PXCMPointI32 contour)
+			{
+				return PXCMPersonTrackingData_PersonTracking_QueryContourPoints(instance, ref contour);
+			}
 #endif
 
         private IntPtr instance;
@@ -505,18 +517,18 @@ public partial class PXCMPersonTrackingData : PXCMBase
 
     public partial class Person
     {
-        /**
-            @brief Returns the Person Detection interface
-        */
+        /// <summary>
+        /// Returns the Person Detection interface
+        /// </summary>
         public PersonTracking QueryTracking()
         {
             IntPtr instance2 = PXCMPersonTrackingData_Person_QueryTracking(instance);
             return instance2 == IntPtr.Zero ? null : new PersonTracking(instance2);
         }
 
-        /**
-            @brief Returns the Person Recognition interface
-        */
+        /// <summary>
+        /// Returns the Person Recognition interface
+        /// </summary>
         public PersonRecognition QueryRecognition()
         {
             IntPtr instance2 = PXCMPersonTrackingData_Person_QueryRecognition(instance);
@@ -525,25 +537,25 @@ public partial class PXCMPersonTrackingData : PXCMBase
 
 
 #if PT_MW_DEV
-        /**
-            @brief Returns the Person Joints interface
-        */
-        public PersonJoints QuerySkeletonJoints()
-        {
-            IntPtr instance2 = PXCMPersonTrackingData_Person_QuerySkeletonJoints(instance);
-            return instance2 == IntPtr.Zero ? null : new PersonJoints(instance2);
-        }
+			/// <summary>
+			/// Returns the Person Joints interface
+			/// </summary>
+			public PersonJoints QuerySkeletonJoints()
+			{
+				IntPtr instance2 = PXCMPersonTrackingData_Person_QuerySkeletonJoints(instance);
+				return instance2 == IntPtr.Zero ? null : new PersonJoints(instance2);
+			}
 
-        /**
-            @brief Returns the Person Pose interface
-        */
-        public PersonPose QueryPose()
-        {
-            IntPtr instance2 = PXCMPersonTrackingData_Person_QueryPose(instance);
-            return instance2 == IntPtr.Zero ? null : new PersonPose(instance2);
-        }
+			/// <summary>
+			/// Returns the Person Pose interface
+			/// </summary>
+			public PersonPose QueryPose()
+			{
+				IntPtr instance2 = PXCMPersonTrackingData_Person_QueryPose(instance);
+				return instance2 == IntPtr.Zero ? null : new PersonPose(instance2);
+			}
 #endif
- 
+
 
         private IntPtr instance;
         public Person(IntPtr instance)
@@ -553,96 +565,97 @@ public partial class PXCMPersonTrackingData : PXCMBase
     }
 
 
-    /*
-        @brief Return the number of persons detected in the current frame.
-    */
+    /// <summary>
+    ///  Return the number of persons detected in the current frame.
+    /// </summary>
     public Int32 QueryNumberOfPeople()
     {
         return PXCMPersonTrackingData_QueryNumberOfPeople(instance);
     }
 
-    /* 
-        @brief Retrieve the person object data using a specific AccessOrder and related index.
-    */
+    /// <summary>
+    /// Retrieve the person object data using a specific AccessOrder and related index.
+    /// </summary>
     public Person QueryPersonData(AccessOrderType accessOrder, Int32 index)
     {
-       return QueryPersonDataINT(instance, accessOrder, index);
+        return QueryPersonDataINT(instance, accessOrder, index);
     }
 
-    /*
-        @brief Retrieve the person object data by its unique Id.
-    */
+    /// <summary>
+    /// Retrieve the person object data by its unique Id.
+    /// </summary>
     public Person QueryPersonDataById(Int32 personID)
     {
         return QueryPersonDataByIdINT(instance, personID);
     }
 
 
-    /**
-		@brief Enters the person to the list of tracked people starting from next frame
-	*/
-	public void StartTracking(Int32 personID) 
+    /// <summary>
+    /// Enters the person to the list of tracked people starting from next frame
+    /// </summary>
+    public void StartTracking(Int32 personID)
     {
         PXCMPersonTrackingData_StartTracking(instance, personID);
     }
 
-	/**
-	    @brief Removes the person from tracking
-	*/
-	public void StopTracking(Int32 personID)
+    /// <summary>
+    /// Removes the person from tracking
+    /// </summary>
+    public void StopTracking(Int32 personID)
     {
         PXCMPersonTrackingData_StopTracking(instance, personID);
     }
 
-     /**
-		@brief Retrieve current tracking state of the Person Tracking module
-	 */
+    /// <summary>
+    /// Retrieve current tracking state of the Person Tracking module
+    /// </summary>
     public TrackingState GetTrackingState()
     {
         return PXCMPersonTrackingData_GetTrackingState(instance);
     }
 
-	 /**
-	    @brief Returns the Person Recognition module interface
-	 */
-	 public RecognitionModuleData QueryRecognitionModuleData() {
-         IntPtr rmd2 = PXCMPersonTrackingData_QueryRecognitionModuleData(instance);
-         return (rmd2 != IntPtr.Zero) ? new RecognitionModuleData(rmd2) : null;
-     }
+    /// <summary>
+    /// Returns the Person Recognition module interface
+    /// </summary>
+    public RecognitionModuleData QueryRecognitionModuleData()
+    {
+        IntPtr rmd2 = PXCMPersonTrackingData_QueryRecognitionModuleData(instance);
+        return (rmd2 != IntPtr.Zero) ? new RecognitionModuleData(rmd2) : null;
+    }
 
 
 #if PT_MW_DEV
-    /**
-       @brief Return the number of fired alerts in the current frame.
-    */
-    public Int32 QueryFiredAlertsNumber()
-    {
-        return PXCMPersonTrackingData_QueryFiredAlertsNumber(instance);
-    }
+		/// <summary>
+		/// Return the number of fired alerts in the current frame.
+		/// </summary>
+		public Int32 QueryFiredAlertsNumber()
+		{
+		return PXCMPersonTrackingData_QueryFiredAlertsNumber(instance);
+		}
 
-    /**
-        @Get the details of the fired alert with the given index.
-    */
-    public pxcmStatus QueryFiredAlertData(Int32 index, AlertData alertData)
-    {
-        return PXCMPersonTrackingData_QueryFiredAlertData(instance, index, ref alertData);
-    }
+		/// <summary>
+		/// @Get the details of the fired alert with the given index.
+		/// </summary>
+		public pxcmStatus QueryFiredAlertData(Int32 index, AlertData alertData)
+		{
+		return PXCMPersonTrackingData_QueryFiredAlertData(instance, index, ref alertData);
+		}
 
-    /**
-		@brief Return whether the specified alert is fired in the current frame, 
-        @brief and retrieve its data if it is.		
-	*/
-    public Boolean IsAlertFired(AlertType alertEvent, AlertData alertData)
-    {
-        return PXCMPersonTrackingData_IsAlertFired(instance, alertEvent, ref alertData);
-    }
+		/// <summary>
+		/// Return whether the specified alert is fired in the current frame, 
+		/// and retrieve its data if it is.		
+		/// </summary>
+		public Boolean IsAlertFired(AlertType alertEvent, AlertData alertData)
+		{
+		return PXCMPersonTrackingData_IsAlertFired(instance, alertEvent, ref alertData);
+		}
 #endif
 
     internal PXCMPersonTrackingData(IntPtr instance, Boolean delete)
-            : base(instance, delete)
+        : base(instance, delete)
     {
     }
-    
+
 }
 
 #if RSSDK_IN_NAMESPACE

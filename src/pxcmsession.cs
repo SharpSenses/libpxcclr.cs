@@ -1,12 +1,12 @@
 /*******************************************************************************
 
-INTEL CORPORATION PROPRIETARY INFORMATION
-This software is supplied under the terms of a license agreement or nondisclosure
-agreement with Intel Corporation and may not be copied or disclosed except in
-accordance with the terms of that agreement
-Copyright(c) 2013 Intel Corporation. All Rights Reserved.
+  INTEL CORPORATION PROPRIETARY INFORMATION
+  This software is supplied under the terms of a license agreement or nondisclosure
+  agreement with Intel Corporation and may not be copied or disclosed except in
+  accordance with the terms of that agreement
+  Copyright(c) 2013 Intel Corporation. All Rights Reserved.
 
-*******************************************************************************/
+ *******************************************************************************/
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -20,16 +20,16 @@ public partial class PXCMSession : PXCMBase
 {
     new public const Int32 CUID = unchecked((Int32)0x20534553);
 
-    /**
-        Metadata types for feedback information attached to current session
-    */
+    /// <summary>
+    /// Metadata types for feedback information attached to current session
+    /// </summary>
     public const Int32 METADATA_FEEDBACK_SAMPLE_INFO = 0x4D534850;
     public const Int32 METADATA_FEEDBACK_FRAMEWORK_INFO = 0x4D464850;
 
-    /** 
-        @structure ImplVersion
-        Describe the video streams requested by a module implementation.
-    */
+    /// <summary> 
+    /// ImplVersion
+    /// Describe the video streams requested by a module implementation.
+    /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public class ImplVersion
@@ -38,11 +38,11 @@ public partial class PXCMSession : PXCMBase
         public Int16 minor;        /* The minor version number */
     };
 
-    /** 
-        @enum ImplGroup
-        The SDK group I/O and algorithm modules into groups and subgroups.
-        This is the enumerator for algorithm groups.
-    */
+    /// <summary> 
+    /// ImplGroup
+    /// The SDK group I/O and algorithm modules into groups and subgroups.
+    /// This is the enumerator for algorithm groups.
+    /// </summary>
     [Flags]
     public enum ImplGroup
     {
@@ -57,11 +57,11 @@ public partial class PXCMSession : PXCMBase
         IMPL_GROUP_USER = 0x40000000,    /* user defined algorithms */
     };
 
-    /**
-        @enum ImplSubgroup
-        The SDK group I/O and algorithm modules into groups and subgroups.
-        This is the enumerator for algorithm subgroups.
-    */
+    /// <summary>
+    /// ImplSubgroup
+    /// The SDK group I/O and algorithm modules into groups and subgroups.
+    /// This is the enumerator for algorithm subgroups.
+    /// </summary>
     [Flags]
     public enum ImplSubgroup
     {
@@ -90,10 +90,10 @@ public partial class PXCMSession : PXCMBase
         IMPL_SUBGROUP_SPEECH_SYNTHESIS = 0x00000002,   /* speech synthesis subgroup */
     };
 
-    /**
-        @enum CoordinateSystem
-        SDK supports several 3D coordinate systems for front and rear facing cameras.
-    */
+    /// <summary>
+    /// CoordinateSystem
+    /// SDK supports several 3D coordinate systems for front and rear facing cameras.
+    /// </summary>
     [Flags]
     public enum CoordinateSystem
     {
@@ -102,10 +102,10 @@ public partial class PXCMSession : PXCMBase
         COORDINATE_SYSTEM_FRONT_DEFAULT = 0x001,    /* Left-hand system: X left, Y up, Z to the user */
     };
 
-    /** 
-        @structure ImplDesc
-        The module descriptor lists details about the module implementation.
-    */
+    /// <summary> 
+    /// ImplDesc
+    /// The module descriptor lists details about the module implementation.
+    /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public class ImplDesc
@@ -133,15 +133,15 @@ public partial class PXCMSession : PXCMBase
         }
     };
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	desc					The module descriptor.
-        @param[in]	iuid					Optional module implementation identifier.
-        @param[in]	cuid					Optional interface identifier.
-        @param[out]	instance				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="desc"> The module descriptor.</param>
+    /// <param name="iuid"> Optional module implementation identifier.</param>
+    /// <param name="cuid"> Optional interface identifier.</param>
+    /// <param name="instance"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl(ImplDesc desc, Int32 iuid, Int32 cuid, out PXCMBase impl)
     {
         IntPtr impl2;
@@ -155,124 +155,124 @@ public partial class PXCMSession : PXCMBase
         return sts;
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	desc					The module descriptor.
-        @param[in]	cuid					Optional interface identifier.
-        @param[out]	instance				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="desc"> The module descriptor.</param>
+    /// <param name="cuid"> Optional interface identifier.</param>
+    /// <param name="instance"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl(ImplDesc desc, Int32 cuid, out PXCMBase instance)
     {
         return CreateImpl(desc, 0, cuid, out instance);
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	iuid					Optional module implementation identifier.
-        @param[in]	cuid					Optional interface identifier.
-        @param[out]	instance				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="iuid"> Optional module implementation identifier.</param>
+    /// <param name="cuid"> Optional interface identifier.</param>
+    /// <param name="instance"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl(Int32 iuid, Int32 cuid, out PXCMBase instance)
     {
         return CreateImpl(null, iuid, cuid, out instance);
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	cuid					Optional interface identifier.
-        @param[out]	instance				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="cuid"> Optional interface identifier.</param>
+    /// <param name="instance"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl(Int32 cuid, out PXCMBase instance)
     {
         return CreateImpl(null, 0, cuid, out instance);
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	desc					The module descriptor.
-        @param[in]	iuid					Optional module implementation identifier.
-        @param[out]	tt				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="desc"> The module descriptor.</param>
+    /// <param name="iuid"> Optional module implementation identifier.</param>
+    /// <param name="tt"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl<TT>(ImplDesc desc, Int32 iuid, out TT tt) where TT : PXCMBase
     {
         PXCMBase tt2;
 #if !NETFX_CORE
         pxcmStatus sts = CreateImpl(desc, iuid, Type2CUID[typeof(TT)], out tt2);
 #else
-        pxcmStatus sts = CreateImpl(desc, iuid, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
+			pxcmStatus sts = CreateImpl(desc, iuid, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
 #endif
         tt = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? (TT)tt2 : null;
         return sts;
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	desc					The module descriptor.
-        @param[out]	tt				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="desc"> The module descriptor.</param>
+    /// <param name="tt"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl<TT>(ImplDesc desc, out TT tt) where TT : PXCMBase
     {
         PXCMBase tt2;
 #if !NETFX_CORE
         pxcmStatus sts = CreateImpl(desc, Type2CUID[typeof(TT)], out tt2);
 #else
-        pxcmStatus sts = CreateImpl(desc, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
+			pxcmStatus sts = CreateImpl(desc, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
 #endif
         tt = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? (TT)tt2 : null;
         return sts;
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[in]	iuid					Optional module implementation identifier.
-        @param[out]	tt				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="iuid"> Optional module implementation identifier.</param>
+    /// <param name="tt"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl<TT>(Int32 iuid, out TT tt) where TT : PXCMBase
     {
         PXCMBase tt2;
 #if !NETFX_CORE
         pxcmStatus sts = CreateImpl(iuid, Type2CUID[typeof(TT)], out tt2);
 #else
-        pxcmStatus sts = CreateImpl(iuid, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
+			pxcmStatus sts = CreateImpl(iuid, Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
 #endif
         tt = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? (TT)tt2 : null;
         return sts;
     }
 
-    /** 
-        @brief Create an instance of the specified module.
-        @param[out]	tt				The created instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR			Successful execution.
-        @return PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.
-    */
+    /// <summary> 
+    /// Create an instance of the specified module.
+    /// </summary>
+    /// <param name="tt"> The created instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR			Successful execution.</returns>
+    /// <returns> PXCM_STATUS_ITEM_UNAVAILABLE	No matched module implementation.</returns>
     public pxcmStatus CreateImpl<TT>(out TT tt) where TT : PXCMBase
     {
         PXCMBase tt2;
 #if !NETFX_CORE
         pxcmStatus sts = CreateImpl(Type2CUID[typeof(TT)], out tt2);
 #else
-        pxcmStatus sts = CreateImpl(Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
+			pxcmStatus sts = CreateImpl(Type2CUID[typeof(TT).GetTypeInfo()], out tt2);
 #endif
         tt = (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? (TT)tt2 : null;
         return sts;
     }
 
-    /** 
-        @brief Create an instance of the PXCMSenseManager interface.
-        @return The PXCMSenseManager instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMSenseManager interface.
+    /// </summary>
+    /// <returns> The PXCMSenseManager instance.</returns>
     public PXCMSenseManager CreateSenseManager()
     {
         PXCMSenseManager senseManager;
@@ -280,10 +280,10 @@ public partial class PXCMSession : PXCMBase
         return (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? senseManager : null;
     }
 
-    /** 
-        @brief Create an instance of the PXCMCaptureManager interface.
-        @return The PXCMCaptureManager instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMCaptureManager interface.
+    /// </summary>
+    /// <returns> The PXCMCaptureManager instance.</returns>
     public PXCMCaptureManager CreateCaptureManager()
     {
         PXCMCaptureManager captureManager;
@@ -291,10 +291,10 @@ public partial class PXCMSession : PXCMBase
         return (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? captureManager : null;
     }
 
-    /** 
-        @brief Create an instance of the PXCMAudioSource interface.
-        @return The PXCMAudioSource instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMAudioSource interface.
+    /// </summary>
+    /// <returns> The PXCMAudioSource instance.</returns>
     public PXCMAudioSource CreateAudioSource()
     {
         PXCMAudioSource source;
@@ -302,33 +302,33 @@ public partial class PXCMSession : PXCMBase
         return (sts >= pxcmStatus.PXCM_STATUS_NO_ERROR) ? source : null;
     }
 
-    /** 
-        @brief Create an instance of the PXCMImage interface with data. The application must
-        maintain the life cycle of the image data for the PXCMImage instance.
-        @param[in]  info	The format and resolution of the image.
-        @param[in]	data	Optional image data.
-        @return The PXCMImage instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMImage interface with data. The application must
+    /// maintain the life cycle of the image data for the PXCMImage instance.
+    /// </summary>
+    /// <param name="info"> The format and resolution of the image.</param>
+    /// <param name="data"> Optional image data.</param>
+    /// <returns> The PXCMImage instance.</returns>
     public PXCMImage CreateImage(PXCMImage.ImageInfo info, PXCMImage.ImageData data)
     {
         IntPtr image = PXCMSession_CreateImage(instance, info, data);
         return (image != IntPtr.Zero) ? new PXCMImage(image, true) : null;
     }
 
-    /** 
-        @brief Create an instance of the PXCMImage interface.
-        @param[in]  info	The format and resolution of the image.
-        @return The PXCMImage instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMImage interface.
+    /// </summary>
+    /// <param name="info"> The format and resolution of the image.</param>
+    /// <returns> The PXCMImage instance.</returns>
     public PXCMImage CreateImage(PXCMImage.ImageInfo info)
     {
         return CreateImage(info, null);
     }
 
-    /** 
-        @brief Create an instance of the PXCMPhoto interface.
-        @return The PXCMImage instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMPhoto interface.
+    /// </summary>
+    /// <returns> The PXCMImage instance.</returns>
     public PXCMPhoto CreatePhoto()
     {
         PXCMPhoto photo = null;
@@ -336,33 +336,33 @@ public partial class PXCMSession : PXCMBase
         return sts < pxcmStatus.PXCM_STATUS_NO_ERROR ? null : photo;
     }
 
-    /** 
-        @brief Create an instance of the PXCMAudio interface with data. The application must
-        maintain the life cycle of the audio data for the PXCMAudio instance.
-        @param[in]  info	The audio channel information.
-        @param[in]	data	Optional audio data.
-        @return The PXCMAudio instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCMAudio interface with data. The application must
+    /// maintain the life cycle of the audio data for the PXCMAudio instance.
+    /// </summary>
+    /// <param name="info"> The audio channel information.</param>
+    /// <param name="data"> Optional audio data.</param>
+    /// <returns> The PXCMAudio instance.</returns>
     public PXCMAudio CreateAudio(PXCMAudio.AudioInfo info, PXCMAudio.AudioData data)
     {
         IntPtr audio = PXCMSession_CreateAudio(instance, info, data);
         return (audio != IntPtr.Zero) ? new PXCMAudio(audio, true) : null;
     }
 
-    /** 
-        @brief Create an instance of the PXCAudio interface.
-        @param[in]  info	The audio channel information.
-        @return The PXCMAudio instance.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCAudio interface.
+    /// </summary>
+    /// <param name="info"> The audio channel information.</param>
+    /// <returns> The PXCMAudio instance.</returns>
     public PXCMAudio CreateAudio(PXCMAudio.AudioInfo info)
     {
         return CreateAudio(info, null);
     }
 
-    /** 
-        @brief Create an instance of the power manager.
-        @return a PXCMPowerState instance.
-    */
+    /// <summary> 
+    /// Create an instance of the power manager.
+    /// </summary>
+    /// <returns> a PXCMPowerState instance.</returns>
     public PXCMPowerState CreatePowerManager()
     {
         IntPtr pm = PXCMSession_CreatePowerState(instance);
@@ -371,51 +371,51 @@ public partial class PXCMSession : PXCMBase
 
 
 
-    /** 
-        @brief Load the module from a file.
-        @param[in]  moduleName		The module file name.
-        @return PXCM_STATUS_NO_ERROR	Successful execution.
-    */
+    /// <summary> 
+    /// Load the module from a file.
+    /// </summary>
+    /// <param name="moduleName"> The module file name.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR	Successful execution.</returns>
     public pxcmStatus LoadImplFromFile(String moduleName)
     {
         return PXCMSession_LoadImplFromFile(instance, moduleName);
     }
 
-    /** 
-        @brief Unload the specified module.
-        @param[in]  moduleName		    The module file name.
-        @return PXCM_STATUS_NO_ERROR	Successful execution.
-    */
+    /// <summary> 
+    /// Unload the specified module.
+    /// </summary>
+    /// <param name="moduleName"> The module file name.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR	Successful execution.</returns>
     public pxcmStatus UnloadImplFromFile(String moduleName)
     {
         return PXCMSession_UnloadImplFromFile(instance, moduleName);
     }
 
-    /** 
-        @brief Set the camera coordinate system.
-        @param[in]  cs          The coordinate system.
-        @return PXC_STATUS_NO_ERROR    Successful execution.
-    */
+    /// <summary> 
+    /// Set the camera coordinate system.
+    /// </summary>
+    /// <param name="cs"> The coordinate system.</param>
+    /// <returns> PXC_STATUS_NO_ERROR    Successful execution.</returns>
     public pxcmStatus SetCoordinateSystem(CoordinateSystem cs)
     {
         return PXCMSession_SetCoordinateSystem(instance, cs);
     }
 
-    /** 
-        @brief Return current camera coordinate system (bit-mask of coordinate systems for front and rear cameras) 
-        @param[in]  cs          The coordinate system.
-        @return PXC_STATUS_NO_ERROR    Successful execution.
-    */
+    /// <summary> 
+    /// Return current camera coordinate system (bit-mask of coordinate systems for front and rear cameras) 
+    /// </summary>
+    /// <param name="cs"> The coordinate system.</param>
+    /// <returns> PXC_STATUS_NO_ERROR    Successful execution.</returns>
     public CoordinateSystem QueryCoordinateSystem()
     {
         return PXCMSession_QueryCoordinateSystem(instance);
     }
 
-    /** 
-        @brief Create an instance of the PXCSession interface.
-        @param[out]	session			The PXCSession instance, to be returned.
-        @return PXCM_STATUS_NO_ERROR	Successful execution.
-    */
+    /// <summary> 
+    /// Create an instance of the PXCSession interface.
+    /// </summary>
+    /// <param name="session"> The PXCSession instance, to be returned.</param>
+    /// <returns> PXCM_STATUS_NO_ERROR	Successful execution.</returns>
     public static PXCMSession CreateInstance()
     {
         IntPtr session2 = PXCMSession_CreateInstance();
@@ -428,7 +428,7 @@ public partial class PXCMSession : PXCMBase
 
             string frameworkName = null;
 #if PH_CS
-                frameworkName = "CSharp";
+				frameworkName = "CSharp";
 #elif PH_UNITY
             frameworkName = "Unity";
 #endif
@@ -468,9 +468,9 @@ public partial class PXCMSession : PXCMBase
     {
     }
 
-    /** 
-    @brief A helper function to access PXCMMetadata instance
-    */
+    /// <summary> 
+    /// A helper function to access PXCMMetadata instance
+    /// </summary>
     public PXCMMetadata QueryMetadata()
     {
         return QueryInstance<PXCMMetadata>();

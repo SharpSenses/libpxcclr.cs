@@ -82,6 +82,16 @@ namespace intel.rssdk
 
         [DllImport(DLLNAME)]
         internal static extern void PXCMObjectRecognitionConfiguration_EnableAbsoluteROI(IntPtr instance, Boolean enable);
+
+        [DllImport(DLLNAME)]
+        internal static extern pxcmStatus PXCMObjectRecognitionConfiguration_SetTrackingROIs(IntPtr instance, PXCMRectF32[] rois, Int32 nRois);
+
+        [DllImport(DLLNAME)]
+        internal static extern pxcmStatus PXCMObjectRecognitionConfiguration_SetLocalizationMechanism(IntPtr instance,LocalizationMechanism lm);
+
+        [DllImport(DLLNAME)]
+        internal static extern void PXCMObjectRecognitionConfiguration_QueryLocalizationMechanism(IntPtr instance, ref LocalizationMechanism lm);
+
     };
 
 #if RSSDK_IN_NAMESPACE

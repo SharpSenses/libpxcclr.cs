@@ -119,12 +119,7 @@ namespace intel.rssdk
             [DllImport(DLLNAME)]
             internal static extern pxcmStatus PXCMHandData_IHand_QueryContour(IntPtr instance, Int32 index, out IntPtr contourData);
 
-            [DllImport(DLLNAME)]
-            internal static extern pxcmStatus PXCMHandData_IHand_QueryCursor(IntPtr instance, out IntPtr cursor);
             
-            [DllImport(DLLNAME)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern Boolean PXCMHandData_IHand_HasCursor(IntPtr instance);
         };
 
         public partial class IContour
@@ -156,17 +151,7 @@ namespace intel.rssdk
         };
 
 
-        public partial class ICursor
-        {
-            [DllImport(DLLNAME)]
-            internal static extern PXCMPoint3DF32 PXCMHandData_ICursor_QueryPointWorld(IntPtr instance);
-
-            [DllImport(DLLNAME)]
-            internal static extern PXCMPoint3DF32 PXCMHandData_ICursor_QueryPointImage(IntPtr instance);
-
-            [DllImport(DLLNAME)]
-            internal static extern Int32 PXCMHandData_ICursor_QueryConfidence(IntPtr instance);
-        };
+    
 
         [DllImport(DLLNAME)]
         internal static extern pxcmStatus PXCMHandData_Update(IntPtr instance);

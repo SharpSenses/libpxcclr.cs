@@ -58,6 +58,8 @@ namespace intel.rssdk
                     return handler.onModuleSetProfile(mid, new PXCMFaceModule(sm.faceEvents, module, false));
                 if (mid == PXCMHandModule.CUID)
                     return handler.onModuleSetProfile(mid, new PXCMHandModule(sm.handEvents, module, false));
+                if (mid == PXCMHandCursorModule.CUID)
+                    return handler.onModuleSetProfile(mid, new PXCMHandCursorModule(sm.cursorEvents, module, false));
                 return handler.onModuleSetProfile(mid, PXCMBase.IntPtr2PXCMBase(module, mid));
             }
 
@@ -68,6 +70,8 @@ namespace intel.rssdk
                     return handler.onModuleProcessedFrame(mid, new PXCMFaceModule(sm.faceEvents, module, false), sample);
                 if (mid == PXCMHandModule.CUID)
                     return handler.onModuleProcessedFrame(mid, new PXCMHandModule(sm.handEvents, module, false), sample);
+                if (mid == PXCMHandCursorModule.CUID)
+                    return handler.onModuleProcessedFrame(mid, new PXCMHandCursorModule(sm.cursorEvents, module, false), sample);
                 return handler.onModuleProcessedFrame(mid, PXCMBase.IntPtr2PXCMBase(module, mid), sample);
             }
 
@@ -199,12 +203,12 @@ namespace intel.rssdk
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern IntPtr PXCMSenseManager_CreateInstance();
 
-        /**
-          @brief	Initialize the SenseManager pipeline for streaming with callbacks. The application must 
-          enable raw streams or algorithm modules before this function.
-          @param[in] handler				Optional callback instance. 
-          @return PXC_STATUS_NO_ERROR		Successful execution.
-        */
+        /// <summary>
+        /// Initialize the SenseManager pipeline for streaming with callbacks. The application must 
+        /// enable raw streams or algorithm modules before this function.
+        /// </summary>
+        /// <param name="handler">Optional callback instance. </param>
+        /// <returns>PXC_STATUS_NO_ERROR		Successful execution.</returns>
         public pxcmStatus Init(Handler handler)
         {
             if (handler == null) return PXCMSenseManager_Init(instance, IntPtr.Zero);
@@ -214,29 +218,27 @@ namespace intel.rssdk
             return PXCMSenseManager_Init(instance, handlerDIR.dirUnmanaged);
         }
 
-        /**
-            @brief	Stream frames from the capture module to the algorithm modules. The application must 
-            initialize the pipeline before calling this function. If blocking, the function blocks until
-            the streaming stops (upon any capture device error or any callback function returns any error.
-            If non-blocking, the function returns immediately while running streaming in a thread.
-            AcquireFrame/ReleaseFrame are not compatible with StreamFrames. Run the SenseManager in the pulling
-            mode with AcquireFrame/ReleaseFrame, or the callback mode with StreamFrames.
-            @param[in]	blocking			The blocking status.
-            @return PXCM_STATUS_NO_ERROR	Successful execution.
-        */
+        /// <summary>
+        /// Stream frames from the capture module to the algorithm modules. The application must 
+        /// initialize the pipeline before calling this function. AcquireFrame/ReleaseFrame are not compatible with StreamFrames. Run the SenseManager in the pulling
+        /// mode with AcquireFrame/ReleaseFrame, or the callback mode with StreamFrames.
+        /// </summary>
+        /// <param name="blocking">True: the function blocks until the streaming stops (upon any capture device error or any callback function returns any error. 
+        /// False: the function returns immediately while running streaming in a thread.</param>
+        /// <returns>PXCM_STATUS_NO_ERROR	Successful execution.</returns>
         public pxcmStatus StreamFrames(Boolean blocking)
         {
             return PXCMSenseManager_StreamFrames(instance, blocking);
         }
 
-        /**
-            @brief    Return the captured sample for the specified module or explicitly/impl requested streams. 
-            For modules, use mid=module interface identifier. 
-            For explictly requested streams via multiple calls to EnableStream(s), use mid=PXCCapture::CUID+0,1,2... 
-            The captured sample is managed internally by the SenseManager. Do not release the instance.
-            @param[in] mid        The module identifier. Usually this is the interface identifier, or PXCCapture::CUID+n for raw video streams.
-            @return The sample instance, or null if the captured sample is not available.
-        */
+        /// <summary>
+        /// Return the captured sample for the specified module or explicitly/impl requested streams. 
+        /// For modules, use mid=module interface identifier. 
+        /// For explictly requested streams via multiple calls to EnableStream(s), use mid=PXCCapture::CUID+0,1,2... 
+        /// The captured sample is managed internally by the SenseManager. Do not release the instance.
+        /// </summary>
+        /// <param name="mid">The module identifier. Usually this is the interface identifier, or PXCCapture::CUID+n for raw video streams.</param>
+        /// <returns>The sample instance, or null if the captured sample is not available.</returns>
         public PXCMCapture.Sample QuerySample(Int32 mid)
         {
             IntPtr sample2 = PXCMSenseManager_QuerySample(instance, mid);

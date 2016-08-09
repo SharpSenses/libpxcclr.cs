@@ -20,18 +20,24 @@ namespace intel.rssdk
     {
         new public const Int32 CUID = 0x4d544f50;
 
-        /* create a new copy of active configuration */
+        /// <summary>
+        /// create a new copy of active configuration
+        /// </summary>
+        /// <returns></returns>
         public PXCMPersonTrackingConfiguration QueryConfiguration()
         {
             IntPtr cfg = PXCMPersonTrackingModule_QueryConfiguration(instance);
-            return (cfg == IntPtr.Zero) ? null : new PXCMPersonTrackingConfiguration(maps, cfg, true);
+            return (cfg == IntPtr.Zero) ? null : new PXCMPersonTrackingConfiguration(maps, cfg, false);
         }
 
-        /* create a placeholder for output */
+        /// <summary>
+        ///  create a placeholder for output
+        /// </summary>
+        /// <returns></returns>
         public PXCMPersonTrackingData QueryOutput()
         {
             IntPtr data = PXCMPersonTrackingModule_QueryOutput(instance);
-            return data == IntPtr.Zero ? null : new PXCMPersonTrackingData(data, true);
+            return data == IntPtr.Zero ? null : new PXCMPersonTrackingData(data, false);
         }
 
         internal PXCMPersonTrackingConfiguration.EventMaps maps;

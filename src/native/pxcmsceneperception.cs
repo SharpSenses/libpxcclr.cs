@@ -224,6 +224,15 @@ namespace intel.rssdk
 
         [DllImport(PXCMBase.DLLNAME)]
         internal static extern pxcmStatus PXCMScenePerception_EnableGravitySensorSupport(IntPtr sp, Boolean enable);
+        
+        [DllImport(PXCMBase.DLLNAME)]
+        internal static extern Boolean PXCMScenePerception_IsGravitySensorSupportEnabled(IntPtr sp);
+
+        [DllImport(PXCMBase.DLLNAME)]
+        internal static extern Boolean PXCMScenePerception_IsInertialSensorSupportEnabled(IntPtr sp);
+
+        [DllImport(PXCMBase.DLLNAME)]
+        internal static extern pxcmStatus PXCMScenePerception_GetVolumePreview(IntPtr sp, Single[] pose, Byte[] volumeImageData, Single[] vertices, Single[] normals);
     };
 
 #if RSSDK_IN_NAMESPACE

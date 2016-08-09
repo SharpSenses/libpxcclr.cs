@@ -26,7 +26,7 @@ namespace intel.rssdk
         internal static extern bool PXCMPhoto_IsXDM(IntPtr photo, String filename);
         
         [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
-        internal static extern pxcmStatus PXCMPhoto_LoadXDM(IntPtr photo, String filename);
+        internal static extern pxcmStatus PXCMPhoto_LoadXDM(IntPtr photo, String filename, Subsample subsample);
 
         [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
         internal static extern pxcmStatus PXCMPhoto_SaveXDM(IntPtr photo, String filename);
@@ -38,16 +38,16 @@ namespace intel.rssdk
         internal static extern IntPtr PXCMPhoto_QueryContainerImage(IntPtr photo);
 
         [DllImport(PXCMBase.DLLNAME)]
-        internal static extern void PXCMPhoto_ResetContainerImage(IntPtr photo);
+        internal static extern pxcmStatus PXCMPhoto_ResetContainerImage(IntPtr photo);
         
         [DllImport(PXCMBase.DLLNAME)]
-        internal static extern IntPtr PXCMPhoto_QueryDepthImage(IntPtr photo, Int32 camIdx);
+        internal static extern IntPtr PXCMPhoto_QueryDepth(IntPtr photo, Int32 camIdx);
 
         [DllImport(PXCMBase.DLLNAME)]
-        internal static extern IntPtr PXCMPhoto_QueryColorImage(IntPtr photo, Int32 camIdx);
+        internal static extern IntPtr PXCMPhoto_QueryImage(IntPtr photo, Int32 camIdx);
 
         [DllImport(PXCMBase.DLLNAME)]
-        internal static extern IntPtr PXCMPhoto_QueryRawDepthImage(IntPtr photo);
+        internal static extern IntPtr PXCMPhoto_QueryRawDepth(IntPtr photo);
 
         [DllImport(PXCMBase.DLLNAME, CharSet = CharSet.Unicode)]
         private static extern void PXCMPhoto_QueryXDMRevision(IntPtr photo, StringBuilder name, int size);

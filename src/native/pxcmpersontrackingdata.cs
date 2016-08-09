@@ -57,12 +57,11 @@ namespace intel.rssdk
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern Boolean PXCMPersonTrackingData_RecognitionModuleData_QueryDatabaseBuffer(IntPtr instance, [Out] byte[] buffer);
 
-            internal static Boolean QueryDatabaseBufferINT(IntPtr instance, out byte[] buffer)
+            internal static Boolean QueryDatabaseBufferINT(IntPtr instance, byte[] buffer)
             {
                 Int32 size = PXCMPersonTrackingData_RecognitionModuleData_QueryDatabaseSize(instance);
                 if (size > 0)
                 {
-                    buffer = new byte[size];
                     return PXCMPersonTrackingData_RecognitionModuleData_QueryDatabaseBuffer(instance, buffer);
                 }
                 else
@@ -158,10 +157,17 @@ namespace intel.rssdk
             internal static extern IntPtr PXCMPersonTrackingData_PersonTracking_QuerySegmentationImage(IntPtr instance);
 
             [DllImport(DLLNAME)]
-            internal static extern PointCombined PXCMPersonTrackingData_PersonTracking_QueryCenterMass(IntPtr instance);
+            internal static extern void PXCMPersonTrackingData_PersonTracking_QueryCenterMass(IntPtr instance, [Out] PointCombined point);
 
             [DllImport(DLLNAME)]
             internal static extern void PXCMPersonTrackingData_PersonTracking_QueryHeadBoundingBox(IntPtr instance, [Out] BoundingBox2D box);
+
+            internal PointCombined QueryCenterMassINT(IntPtr instance)
+            {
+                PointCombined point = new PointCombined();
+                PXCMPersonTrackingData_PersonTracking_QueryCenterMass(instance, point);
+                return point;
+            }
 
             internal BoundingBox2D QueryHeadBoundingBoxINT(IntPtr instance)
             {
@@ -169,6 +175,9 @@ namespace intel.rssdk
                 PXCMPersonTrackingData_PersonTracking_QueryHeadBoundingBox(instance, box);
                 return box;
             }
+
+            [DllImport (DLLNAME)]
+            internal static extern IntPtr PXCMPersonTrackingData_PersonTracking_QueryBlobMask(IntPtr instance);
 
 #if PT_MW_DEV
             [DllImport(DLLNAME)]

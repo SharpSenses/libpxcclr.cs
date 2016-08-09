@@ -84,12 +84,20 @@ public partial class PXCM3DScan:PXCMBase {
         {
             handler.Dispose();
             handler = null;
+
+            lock (maps.cs)
+            {
+                maps.alert = null;
+            }
         }
 
         if (d != null)
         {
             handler = new AlertHandlerDIR(d);
             PXCM3DScan_Subscribe(instance, handler.dirUnmanaged);
+            lock(maps.cs) {
+                maps.alert=handler;
+            }
         }
         else
         {
