@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>libpxcclr.cs</id>
-    <version>10.0.26.396</version>
+    <version>10.0.26.397</version>
     <title>"Intel(R) RealSense(TM) SDK C# Wrapper Library"</title>
     <authors>Intel</authors>
     <owners>Intel</owners>
