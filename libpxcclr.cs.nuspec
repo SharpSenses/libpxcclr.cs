@@ -2,10 +2,10 @@
 <package >
   <metadata>
     <id>libpxcclr.cs</id>
-    <version>10.0.26.397</version>
+    <version>10.0.26.400</version>
     <title>"Intel(R) RealSense(TM) SDK C# Wrapper Library"</title>
-    <authors>Intel</authors>
-    <owners>Intel</owners>
+    <authors>Original by Intel, uploaded by Andre Carlucci</authors>
+    <owners>Andre Carlucci</owners>
     <projectUrl>https://github.com/SharpSenses/libpxcclr.cs</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>"AnyCpu version of libpxcclr.cs"</description>
